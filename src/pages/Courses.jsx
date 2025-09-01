@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import CourseCard from '../Components/CourseCard';
-import EnrollmentForm from '../Components/EnrollmentForm';
+import CourseCard from '../components/CourseCard';
+import EnrollmentForm from '../components/EnrollmentForm';
 
 const courses = [
   { name: 'Fundamentals of IT', fees: '$200', image: '.assets/HH.webp' },

@@ -1,7 +1,7 @@
-import EnrollmentForm from "../Components/EnrollmentForm";
+import EnrollmentForm from "../components/EnrollmentForm";
 import Gallery from "./Gallery";
 import Courses from "./Courses";
-import CourseCard from "../Components/CourseCard";
+import CourseCard from "../components/CourseCard";
 import WhatsAppButton from "../components/WhatsAppButton";
 
 

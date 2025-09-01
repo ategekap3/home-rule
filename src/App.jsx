@@ -1,12 +1,12 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import Header from './Components/header';
-import Navbar from './Components/Navbar';
+import Header from './components/header';
+import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Courses from './pages/Courses';
 import Admin from './pages/Admin';
-import CourseCard from './Components/CourseCard';
-import EnrollmentForm from './Components/EnrollmentForm';
+import CourseCard from './components/CourseCard';
+import EnrollmentForm from './components/EnrollmentForm';
 import Footer from './components/Footer';
 import Gallery from './pages/Gallery';
 import WhatsAppButton from './components/WhatsAppButton';
