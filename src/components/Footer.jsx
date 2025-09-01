@@ -15,18 +15,21 @@ const Footer = () => {
           <a href="#contact">Contact</a>
         </nav>
 
-      
-
-<div className="footer-socials">
-  <a href="https://github.com/yourhandle" target="_blank"><FaGithub /></a>
-  <a href="https://linkedin.com/in/yourhandle" target="_blank"><FaLinkedin /></a>
-  <a href="https://twitter.com/yourhandle" target="_blank"><FaTwitter /></a>
-</div>
-
+        <div className="footer-socials">
+          <a href="https://github.com/yourhandle" target="_blank" rel="noopener noreferrer">
+            GitHub
+          </a>
+          <a href="https://linkedin.com/in/yourhandle" target="_blank" rel="noopener noreferrer">
+            LinkedIn
+          </a>
+          <a href="https://twitter.com/yourhandle" target="_blank" rel="noopener noreferrer">
+            Twitter
+          </a>
+        </div>
       </div>
 
       <div className="footer-bottom">
-        © {new Date().getFullYear()} MyPortfolio. All rights reserved.
+        © {new Date().getFullYear()} Modern Computer World UG. All rights reserved.
       </div>
     </footer>
   );
