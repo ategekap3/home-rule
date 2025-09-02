@@ -1,19 +1,24 @@
+// src/components/ServicesNav.jsx
 import React from 'react';
 import './ServicesNav.css';
 
-const ServicesNav = () => {
-  const scrollToSection = (id) => {
-    const section = document.getElementById(id);
-    if (section) {
-      section.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+const services = [
+  { name: 'Computer Repair', targetId: 'computer-repair' },
+  { name: 'Software Installation', targetId: 'software-installation' },
+  { name: 'Hardware Support', targetId: 'hardware' },
+  { name: 'Video Editing', targetId: 'editing' },
+];
 
+const ServicesNav = () => {
   return (
     <div className="services-nav">
-      <button onClick={() => scrollToSection('web-design')}>Web Design</button>
-      <button onClick={() => scrollToSection('seo')}>SEO Optimization</button>
-      <button onClick={() => scrollToSection('branding')}>Branding</button>
+      <div className="services-scroll">
+        {services.map((service) => (
+          <a key={service.name} href={`#${service.targetId}`} className="service-button">
+            {service.name}
+          </a>
+        ))}
+      </div>
     </div>
   );
 };

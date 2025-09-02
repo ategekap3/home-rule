@@ -1,26 +1,41 @@
+/* src/components/ServicesNav.css */
+
 .services-nav {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  padding: 2rem;
-  background-color: #f3f3f3;
-  border-bottom: 1px solid #ddd;
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  width: 100%;
+  overflow: hidden;
+  background: #f8f8f8;
+  padding: 10px 0;
+  margin-bottom: 20px;
 }
 
-.services-nav button {
-  padding: 0.6rem 1.2rem;
-  font-size: 1rem;
-  border: none;
-  background-color: #00bfa6;
-  color: white;
+.services-scroll {
+  display: flex;
+  gap: 12px;
+  animation: scroll-left 20s linear infinite;
+  width: max-content;
+  padding-left: 100%;
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.service-button {
+  padding: 10px 20px;
+  background-color: #007bff;
   border-radius: 20px;
-  cursor: pointer;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  white-space: nowrap;
   transition: background-color 0.3s ease;
 }
 
-.services-nav button:hover {
-  background-color: #009b86;
+.service-button:hover {
+  background-color: #0056b3;
 }

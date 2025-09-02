@@ -1,30 +1,127 @@
+/* src/components/ServicesSection.css */
+
+/* Section layout */
 .service-section {
-  padding: 4rem 2rem;
-  background-color: #fff;
-  border-bottom: 1px solid #eee;
+  padding: 40px 20px;
+  text-align: center;
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #ddd;
 }
 
-.service-content {
+.service-section h2 {
+  font-size: 1.8rem;
+  color: #222;
+  margin-bottom: 20px;
+}
+
+/* Image grid */
+.service-gallery {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-  max-width: 1000px;
-  margin: auto;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
 }
 
-.service-content img {
-  width: 100%;
-  max-width: 500px;
+.service-gallery img {
+  width: 250px;
+  max-width: 90%;
   border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-.service-content h2 {
-  font-size: 2rem;
-  margin-bottom: 1rem;
+.service-gallery img:hover {
+  transform: scale(1.05);
 }
 
-.service-content p {
+/* Lightbox modal */
+.lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.lightbox-content {
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+  padding: 20px;
+  background: #111;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.lightbox-content img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  max-height: 80vh;
+}
+
+/* Close button */
+.lightbox-close {
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  font-size: 2.5rem;
+  color: white;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+}
+
+/* Caption below image */
+.lightbox-caption {
+  margin-top: 15px;
+  color: #ddd;
   font-size: 1.1rem;
-  color: #444;
+  font-weight: 400;
+}
+
+/* Navigation arrows */
+.lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 2.5rem;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 10px;
+  user-select: none;
+  transition: 0.3s;
+}
+
+.lightbox-nav.left {
+  left: -60px;
+}
+
+.lightbox-nav.right {
+  right: -60px;
+}
+
+.lightbox-nav:hover {
+  color: #00ffcc;
+}
+@media (max-width: 600px) {
+  .lightbox-caption {
+    font-size: 0.95rem;
+  }
+
+  .lightbox-nav {
+    font-size: 2rem;
+  }
+
+  .lightbox-close {
+    font-size: 2rem;
+  }
 }

@@ -1,6 +1,6 @@
 // src/components/EnrollmentForm.jsx
-import React, { useState } from 'react';
-import './EnrollmentForm.css'; // CSS for styling
+import React, { useState, useEffect } from 'react';
+import './EnrollmentForm.css';
 
 const Admit = ({ formData, onReset }) => {
   return (
@@ -15,12 +15,12 @@ const Admit = ({ formData, onReset }) => {
   );
 };
 
-function EnrollmentForm({ addAdmission }) {
+function EnrollmentForm({ addAdmission, selectedCourse = '' }) {
   const [formData, setFormData] = useState({
     firstName: '',
     secondName: '',
     phone: '',
-    course: '',
+    course: selectedCourse || '',
     nationality: ''
   });
 
@@ -34,6 +34,12 @@ function EnrollmentForm({ addAdmission }) {
     'Cybersecurity'
   ];
 
+  useEffect(() => {
+    if (selectedCourse) {
+      setFormData(prev => ({ ...prev, course: selectedCourse }));
+    }
+  }, [selectedCourse]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -41,7 +47,9 @@ function EnrollmentForm({ addAdmission }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    addAdmission(formData);
+    if (addAdmission) {
+      addAdmission(formData);
+    }
     setIsSubmitted(true);
   };
 
@@ -50,7 +58,7 @@ function EnrollmentForm({ addAdmission }) {
       firstName: '',
       secondName: '',
       phone: '',
-      course: '',
+      course: selectedCourse || '',
       nationality: ''
     });
     setIsSubmitted(false);

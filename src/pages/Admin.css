@@ -1,97 +1,86 @@
-.admin-login-container {
-  max-width: 350px;
-  margin: 100px auto;
-  padding: 25px;
-  background: #f0f4ff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(37,117,252,0.3);
-  text-align: center;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+/* src/pages/Admin.css */
+
+.admin-login-container, .admin-container {
+  max-width: 600px;
+  margin: 40px auto;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  background: #fafafa;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-.admin-login-container h2 {
+.admin-login-container h2,
+.admin-container h2 {
+  text-align: center;
   margin-bottom: 20px;
-  color: #2575fc;
+  color: #222;
 }
 
 .admin-login-form input {
   width: 100%;
-  padding: 12px;
+  padding: 10px 14px;
   margin-bottom: 15px;
-  border-radius: 8px;
-  border: 1.8px solid #ccc;
-  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
 }
 
 .admin-login-form button {
-  background-color: #2575fc;
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
   border: none;
   color: white;
-  padding: 12px;
-  border-radius: 25px;
-  font-size: 16px;
   font-weight: 700;
+  font-size: 1rem;
+  border-radius: 6px;
   cursor: pointer;
-  width: 100%;
-  transition: background-color 0.3s ease;
 }
 
 .admin-login-form button:hover {
-  background-color: #1a53c2;
+  background-color: #0056b3;
 }
 
 .error-msg {
-  color: #d9534f;
-  margin-top: 10px;
+  color: #b00020;
   font-weight: 600;
-}
-
-/* Admin list styling */
-.admin-container {
-  max-width: 700px;
-  margin: 40px auto;
-  padding: 20px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.admin-container h2 {
+  margin-top: 8px;
   text-align: center;
-  color: #2575fc;
-  margin-bottom: 30px;
 }
 
 .admissions-list {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 .admission-card {
-  background: #f5f7fa;
-  border-radius: 12px;
-  padding: 20px 25px;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 12px rgba(37,117,252,0.1);
+  background: #fff;
+  border-radius: 6px;
+  padding: 15px 20px;
+  margin-bottom: 15px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.1);
 }
 
 .admission-header {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 15px;
-  font-weight: 600;
-  color: #0b3d91;
-}
-
-.admission-number {
-  font-size: 18px;
-}
-
-.admission-date {
-  font-size: 14px;
-  font-style: italic;
-  color: #555;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  color: #666;
 }
 
 .admission-info p {
-  margin: 6px 0;
-  font-size: 16px;
+  margin: 4px 0;
+  font-size: 1rem;
+  color: #333;
+}
+
+.admission-number {
+  font-weight: 700;
+}
+
+.admission-date {
+  font-style: italic;
 }

@@ -1,3 +1,4 @@
+// src/pages/Courses.jsx
 import { useState } from 'react';
 import CourseCard from '../components/CourseCard';
 import EnrollmentForm from '../components/EnrollmentForm';
@@ -8,7 +9,7 @@ const courses = [
   { name: 'Science', fees: '$180', image: '/science.jpg' }
 ];
 
-const Courses = () => {
+const Courses = ({ addAdmission }) => {
   const [selectedCourse, setSelectedCourse] = useState(null);
 
   return (
@@ -23,11 +24,15 @@ const Courses = () => {
       {selectedCourse && (
         <>
           <h3>Enroll in {selectedCourse.name}</h3>
-          <EnrollmentForm selectedCourse={selectedCourse.name} onFormSubmit={(data) => {
-            alert(`Form submitted for ${data.course}`);
-            console.log('Enrollment Data:', data);
-            setSelectedCourse(null); // close form after submission
-          }} />
+          <EnrollmentForm
+            selectedCourse={selectedCourse.name}
+            addAdmission={(data) => {
+              addAdmission(data);
+              alert(`Form submitted for ${data.course}`);
+              console.log('Enrollment Data:', data);
+              setSelectedCourse(null); // close form after submission
+            }}
+          />
         </>
       )}
     </div>

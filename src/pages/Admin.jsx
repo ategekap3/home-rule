@@ -1,3 +1,4 @@
+// src/pages/Admin.jsx
 import React, { useState } from 'react';
 import './Admin.css';
 
@@ -6,7 +7,7 @@ const Admin = ({ admissions }) => {
   const [authenticated, setAuthenticated] = useState(false);
   const [error, setError] = useState('');
 
-  const ADMIN_PASSWORD = 'admin123';  // Change to your desired password
+  const ADMIN_PASSWORD = 'admin123';
 
   const handleLogin = (e) => {
     e.preventDefault();

@@ -1,16 +1,13 @@
+/* src/components/EnrollmentForm.css */
+
 .container {
   max-width: 450px;
-  margin: 40px auto;
+  margin: 20px auto;
+  background-color: #f9f9f9;
+  padding: 25px 30px;
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  padding: 20px;
-}
-
-/* FORM */
-.enrollment-form {
-  background: #f5f7fa;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .enrollment-form h2 {
@@ -21,83 +18,69 @@
 
 .enrollment-form label {
   display: block;
-  margin-top: 15px;
+  margin: 15px 0 6px;
   font-weight: 600;
-  color: #555;
+  color: #444;
 }
 
 .enrollment-form input,
 .enrollment-form select {
   width: 100%;
-  padding: 10px 12px;
-  margin-top: 6px;
-  border: 1.8px solid #ccc;
-  border-radius: 6px;
-  font-size: 15px;
-  transition: border-color 0.3s ease;
+  padding: 9px 12px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s;
 }
 
 .enrollment-form input:focus,
 .enrollment-form select:focus {
-  border-color: #2575fc;
-  outline: none;
+  border-color: #007bff;
 }
 
 .submit-btn {
-  margin-top: 25px;
+  margin-top: 20px;
   width: 100%;
-  background-color: #2575fc;
-  border: none;
-  padding: 12px;
+  background-color: #007bff;
   color: white;
   font-weight: 700;
-  font-size: 16px;
-  border-radius: 25px;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
   cursor: pointer;
+  font-size: 1.1rem;
   transition: background-color 0.3s ease;
 }
 
 .submit-btn:hover {
-  background-color: #1a53c2;
+  background-color: #0056b3;
 }
 
-/* ADMIT */
 .admit-container {
-  background: #e6f0ff;
-  border-radius: 12px;
-  padding: 30px 25px;
-  box-shadow: 0 4px 15px rgba(37, 117, 252, 0.3);
   text-align: center;
-  color: #2575fc;
+  padding: 20px;
+  background-color: #d4edda;
+  border-radius: 8px;
+  color: #155724;
+  box-shadow: 0 0 10px rgba(0,128,0,0.2);
 }
 
 .admit-container h2 {
-  margin-bottom: 20px;
-  font-size: 28px;
-}
-
-.admit-container p {
-  font-size: 18px;
-  margin: 8px 0;
-}
-
-.admit-container strong {
-  color: #0b3d91;
+  margin-bottom: 15px;
 }
 
 .reset-btn {
-  margin-top: 30px;
-  padding: 12px 30px;
-  font-size: 16px;
-  font-weight: 600;
-  border-radius: 25px;
-  background-color: #2575fc;
-  border: none;
+  margin-top: 20px;
+  background-color: #155724;
   color: white;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  font-weight: 700;
 }
 
 .reset-btn:hover {
-  background-color: #1a53c2;
+  background-color: #0b3d16;
 }

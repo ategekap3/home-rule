@@ -1,10 +1,11 @@
+// src/pages/enroll-now.jsx
 import React from 'react';
 import EnrollmentForm from '../components/EnrollmentForm';
 
-function Enroll() {
+function Enroll({ addAdmission }) {
   return (
     <div>
-      <EnrollmentForm />
+      <EnrollmentForm addAdmission={addAdmission} />
     </div>
   );
 }
