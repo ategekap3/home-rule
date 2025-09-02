@@ -11,6 +11,8 @@ import EnrollmentForm from './components/EnrollmentForm';
 import Footer from './components/Footer';
 import Gallery from './pages/Gallery';
 import WhatsAppButton from './components/WhatsAppButton';
+import Enroll from './pages/enroll';
+
 
 
 
@@ -24,7 +26,9 @@ function App() {
         <Route path="/Gallery" element={<Gallery />} />
        
         <Route path="/courses" element={<Courses />} />
+       <Route path="/enroll" element={<Enroll />} />
         <Route path="/admin" element={<Admin />} />
+        
         
       </Routes>
       <WhatsAppButton/>

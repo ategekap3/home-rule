@@ -1,52 +1,91 @@
-import { useState } from 'react';
-import PDFButton from './PDFButton';
+import React, { useState } from 'react';
+import './EnrollmentForm.css'; // Optional if you want to style it
 
-const EnrollmentForm = ({ selectedCourse, onFormSubmit }) => {
+function EnrollmentForm() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    course: selectedCourse || ''
+    firstName: '',
+    secondName: '',
+    phone: '',
+    course: '',
+    nationality: ''
   });
 
-  const handleChange = e => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const courses = [
+    'Web Development',
+    'Graphic Design',
+    'Data Science',
+    'Digital Marketing',
+    'Cybersecurity'
+  ];
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if(!formData.name || !formData.email || !formData.course){
-      alert('Please fill in all fields');
-      return;
-    }
-    onFormSubmit(formData);
+    console.log('Form Submitted:', formData);
+    alert('Form submitted successfully!');
+    // You can also send the data to a server or email service here
   };
 
   return (
-    <PDFButton filename={`Enrollment-${formData.name || 'form'}.pdf`}>
-      <form onSubmit={handleSubmit} style={{ maxWidth: '400px', margin: 'auto', padding: '1rem', border: '1px solid #ccc', borderRadius: '8px' }}>
-        <h2>Enrollment Form</h2>
-        <label>
-          Name:<br />
-          <input name="name" value={formData.name} onChange={handleChange} required />
-        </label><br /><br />
-        <label>
-          Email:<br />
-          <input name="email" type="email" value={formData.email} onChange={handleChange} required />
-        </label><br /><br />
-        <label>
-          Course:<br />
-          <select name="course" value={formData.course} onChange={handleChange} required>
-            <option value="">Select Course</option>
-            <option value="ICT">Fundamentals of IT</option>
-             <option value="ICT">Ms Office suite</option>
-            <option value="Math">Programming</option>
-            <option value="Science">Graphics Design</option>
-          </select>
-        </label><br /><br />
-        <button type="submit" style={{ padding: '0.5rem 1rem' }}>Submit</button>
-      </form>
-    </PDFButton>
+    <form className="enrollment-form" onSubmit={handleSubmit}>
+      <h2>Enrollment Form</h2>
+
+      <label>First Name</label>
+      <input
+        type="text"
+        name="firstName"
+        value={formData.firstName}
+        onChange={handleChange}
+        required
+      />
+
+      <label>Second Name</label>
+      <input
+        type="text"
+        name="secondName"
+        value={formData.secondName}
+        onChange={handleChange}
+        required
+      />
+
+      <label>Phone Number</label>
+      <input
+        type="tel"
+        name="phone"
+        value={formData.phone}
+        onChange={handleChange}
+        required
+      />
+
+      <label>Choose Course</label>
+      <select
+        name="course"
+        value={formData.course}
+        onChange={handleChange}
+        required
+      >
+        <option value="">-- Select a course --</option>
+        {courses.map((course, idx) => (
+          <option key={idx} value={course}>{course}</option>
+        ))}
+      </select>
+
+      <label>Nationality</label>
+      <input
+        type="text"
+        name="nationality"
+        value={formData.nationality}
+        onChange={handleChange}
+        required
+      />
+
+      <button type="submit">Submit</button>
+    </form>
   );
-};
+}
 
 export default EnrollmentForm;

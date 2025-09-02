@@ -1,4 +1,6 @@
 import EnrollmentForm from "../components/EnrollmentForm";
+import ServicesNav from "../components/ServicesNav";
+import ServiceSection from "../components/ServicesSection";
 import Gallery from "./Gallery";
 import Courses from "./Courses";
 import CourseCard from "../components/CourseCard";
@@ -16,12 +18,15 @@ const Home = () => {
     <div style={{ padding: '1rem', textAlign: 'center' }}>
       <h1>Welcome to Our School</h1>
       <h3>W are the leading computer tutors and IT service providers to less budget market</h3>
+    
       <p>Enroll in your desired course below.</p>
      
 
        <Gallery/>
        <Courses/>
         <EnrollmentForm onFormSubmit={onFormSubmit} />
+
+        
       
         <WhatsAppButton/>
 
