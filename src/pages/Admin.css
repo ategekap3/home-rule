@@ -1,0 +1,97 @@
+.admin-login-container {
+  max-width: 350px;
+  margin: 100px auto;
+  padding: 25px;
+  background: #f0f4ff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(37,117,252,0.3);
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.admin-login-container h2 {
+  margin-bottom: 20px;
+  color: #2575fc;
+}
+
+.admin-login-form input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 1.8px solid #ccc;
+  font-size: 16px;
+}
+
+.admin-login-form button {
+  background-color: #2575fc;
+  border: none;
+  color: white;
+  padding: 12px;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.admin-login-form button:hover {
+  background-color: #1a53c2;
+}
+
+.error-msg {
+  color: #d9534f;
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+/* Admin list styling */
+.admin-container {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.admin-container h2 {
+  text-align: center;
+  color: #2575fc;
+  margin-bottom: 30px;
+}
+
+.admissions-list {
+  list-style: none;
+  padding: 0;
+}
+
+.admission-card {
+  background: #f5f7fa;
+  border-radius: 12px;
+  padding: 20px 25px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(37,117,252,0.1);
+}
+
+.admission-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  font-weight: 600;
+  color: #0b3d91;
+}
+
+.admission-number {
+  font-size: 18px;
+}
+
+.admission-date {
+  font-size: 14px;
+  font-style: italic;
+  color: #555;
+}
+
+.admission-info p {
+  margin: 6px 0;
+  font-size: 16px;
+}
