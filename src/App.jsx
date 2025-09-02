@@ -10,7 +10,7 @@ import Gallery from './pages/Gallery';
 import WhatsAppButton from './components/WhatsAppButton';
 import Footer from './components/Footer';
 
-import Enroll from './pages/enroll';  // This is your enrollment page (container/component)
+import Enroll from './pages/enroll-now';  // This is your enrollment page (container/component)
 
 function App() {
   // Store all admissions globally here
@@ -36,7 +36,7 @@ function App() {
         <Route path="/courses" element={<Courses />} />
 
         {/* Pass addAdmission function as prop to Enroll */}
-        <Route path="/enroll" element={<Enroll addAdmission={addAdmission} />} />
+        <Route path="/enroll-now" element={<Enroll addAdmission={addAdmission} />} />
 
         {/* Pass admissions list as prop to Admin */}
         <Route path="/admin" element={<Admin admissions={admissions} />} />

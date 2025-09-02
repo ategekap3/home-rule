@@ -12,7 +12,7 @@ const Navbar = () => {
         <NavLink to="/" style={({ isActive }) => (isActive ? activeStyle : undefined)}>Home</NavLink>
       <NavLink to="/Gallery" style={({ isActive }) => (isActive ? activeStyle : undefined)}>Gallery</NavLink>
       <NavLink to="/courses" style={({ isActive }) => (isActive ? activeStyle : undefined)}>Courses</NavLink>
-      <NavLink to="/enroll" style={({ isActive }) => (isActive ? activeStyle : undefined)}>Enroll</NavLink>
+      <NavLink to="/enroll-now" style={({ isActive }) => (isActive ? activeStyle : undefined)}>Enroll-now</NavLink>
       <NavLink to="/admin" style={({ isActive }) => (isActive ? activeStyle : undefined)}>Admin</NavLink>
     </nav>
   );
