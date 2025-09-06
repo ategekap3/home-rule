@@ -2,11 +2,15 @@
 import { useState } from 'react';
 import CourseCard from '../components/CourseCard';
 import EnrollmentForm from '../components/EnrollmentForm';
+import img1 from '../assets/img1.jpg';
+import img2 from '../assets/img2.jpg';
+import img3 from '../assets/img3.jpg';
 
 const courses = [
-  { name: 'Fundamentals of IT', fees: '$200', image: '.assets/HH.webp' },
-  { name: 'Graphics Design', fees: '$150', image: '..//DESIGN.jpg' },
-  { name: 'Science', fees: '$180', image: '/science.jpg' }
+  { name: 'Fundamentals of IT', fees: 'UGX.450K', image: '.assets/HH.webp' },
+  { name: 'Graphics Design', fees: 'UGX.800K', image: '/assests/img1.jpg' },
+  { name: 'Ms. Office Suite', fees: 'UGX.500K', image: '/science.jpg' },
+  { name: 'Programming', fees: 'UGX.1000K', image: '.assests/img2.jpg' }
 ];
 
 const Courses = ({ addAdmission }) => {

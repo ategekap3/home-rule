@@ -10,7 +10,7 @@ const Admit = ({ formData, onReset }) => {
       <p>You've enrolled in: <strong>{formData.course}</strong></p>
       <p>We’ll contact you at: <strong>{formData.phone}</strong></p>
       <p>Nationality: <strong>{formData.nationality}</strong></p>
-      <button className="reset-btn" onClick={onReset}>Enroll Another</button>
+      <button className="reset-btn" onClick={onReset}>Close</button>
     </div>
   );
 };
@@ -27,11 +27,11 @@ function EnrollmentForm({ addAdmission, selectedCourse = '' }) {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const courses = [
+    'Ms. Office suite',
     'Web Development',
     'Graphic Design',
-    'Data Science',
-    'Digital Marketing',
-    'Cybersecurity'
+    'Fundamentals of IT',
+    'Web Design & Development'
   ];
 
   useEffect(() => {

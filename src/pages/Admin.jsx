@@ -7,7 +7,7 @@ const Admin = ({ admissions }) => {
   const [authenticated, setAuthenticated] = useState(false);
   const [error, setError] = useState('');
 
-  const ADMIN_PASSWORD = 'admin123';
+  const ADMIN_PASSWORD = '7979';
 
   const handleLogin = (e) => {
     e.preventDefault();
