@@ -1,38 +1,115 @@
-// src/pages/Admin.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Admin.css';
+import {
+  collection,
+  onSnapshot,
+  doc,
+  deleteDoc,
+  updateDoc,
+  query,
+  orderBy,
+} from 'firebase/firestore';
+import { db, auth } from '../components/firebase';
+import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
 
-const Admin = ({ admissions }) => {
+const Admin = () => {
+  const [user, setUser] = useState(null);
+  const [admissions, setAdmissions] = useState([]);
+  const [editingEntry, setEditingEntry] = useState(null);
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [authenticated, setAuthenticated] = useState(false);
-  const [error, setError] = useState('');
+  const [authError, setAuthError] = useState('');
 
-  const ADMIN_PASSWORD = '7979';
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser);
+    });
 
-  const handleLogin = (e) => {
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (!user) return;
+
+    const q = query(collection(db, 'admissions'), orderBy('submittedAt', 'desc'));
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const data = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+        submittedAt: doc.data().submittedAt?.toDate() || new Date(),
+      }));
+      setAdmissions(data);
+    });
+
+    return () => unsubscribe();
+  }, [user]);
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (password === ADMIN_PASSWORD) {
-      setAuthenticated(true);
-      setError('');
-    } else {
-      setError('Incorrect password');
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      setAuthError('');
+    } catch (error) {
+      setAuthError('Invalid email or password');
     }
   };
 
-  if (!authenticated) {
+  const handleLogout = async () => {
+    await signOut(auth);
+    setUser(null);
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm('Are you sure you want to delete this admission?')) {
+      await deleteDoc(doc(db, 'admissions', id));
+    }
+  };
+
+  const handleEdit = (entry) => {
+    setEditingEntry({ ...entry });
+  };
+
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+    setEditingEntry((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    const entryRef = doc(db, 'admissions', editingEntry.id);
+    await updateDoc(entryRef, {
+      firstName: editingEntry.firstName,
+      secondName: editingEntry.secondName,
+      phone: editingEntry.phone,
+      course: editingEntry.course,
+      nationality: editingEntry.nationality,
+    });
+
+    setEditingEntry(null);
+  };
+
+  if (!user) {
     return (
       <div className="admin-login-container">
         <h2>Admin Login</h2>
         <form onSubmit={handleLogin} className="admin-login-form">
           <input
+            type="email"
+            placeholder="Admin Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input
             type="password"
-            placeholder="Enter admin password"
+            placeholder="Admin Password"
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
           <button type="submit">Login</button>
-          {error && <p className="error-msg">{error}</p>}
+          {authError && <p className="error-msg">{authError}</p>}
         </form>
       </div>
     );
@@ -40,7 +117,10 @@ const Admin = ({ admissions }) => {
 
   return (
     <div className="admin-container">
-      <h2>All Admitted Students</h2>
+      <div className="admin-header">
+        <h2>All Admitted Students</h2>
+        <button onClick={handleLogout} className="logout-btn">Logout</button>
+      </div>
       {admissions.length === 0 ? (
         <p>No admissions yet.</p>
       ) : (
@@ -59,9 +139,60 @@ const Admin = ({ admissions }) => {
                 <p><strong>Phone:</strong> {entry.phone}</p>
                 <p><strong>Nationality:</strong> {entry.nationality}</p>
               </div>
+              <div className="admission-actions">
+                <button onClick={() => handleEdit(entry)}>Edit</button>
+                <button onClick={() => handleDelete(entry.id)}>Delete</button>
+              </div>
             </li>
           ))}
         </ul>
+      )}
+
+      {editingEntry && (
+        <form className="edit-form" onSubmit={handleEditSubmit}>
+          <h3>Edit Admission</h3>
+          <input
+            type="text"
+            name="firstName"
+            value={editingEntry.firstName}
+            onChange={handleEditChange}
+            required
+          />
+          <input
+            type="text"
+            name="secondName"
+            value={editingEntry.secondName}
+            onChange={handleEditChange}
+            required
+          />
+          <input
+            type="tel"
+            name="phone"
+            value={editingEntry.phone}
+            onChange={handleEditChange}
+            required
+          />
+          <input
+            type="text"
+            name="course"
+            value={editingEntry.course}
+            onChange={handleEditChange}
+            required
+          />
+          <input
+            type="text"
+            name="nationality"
+            value={editingEntry.nationality}
+            onChange={handleEditChange}
+            required
+          />
+          <div className="edit-buttons">
+            <button type="submit">Save</button>
+            <button type="button" onClick={() => setEditingEntry(null)}>
+              Cancel
+            </button>
+          </div>
+        </form>
       )}
     </div>
   );
