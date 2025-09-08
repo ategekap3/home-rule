@@ -14,7 +14,7 @@
 /* Animated subtle network dots and lines */
 
 .tech-background {
-  position: fixed;
+  position: relative;
   top: 0;
   left: 0;
   width: 100%;
