@@ -1,26 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import './EnrollmentForm.css';
-
-import { collection, addDoc, Timestamp } from 'firebase/firestore';
-import { db } from './firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../components/firebase';
 
 const Admit = ({ formData, onReset }) => {
   return (
     <div className="admit-container">
       <h2>🎉 Admission Successful!</h2>
-      <p>
-        Welcome, <strong>{formData.firstName} {formData.secondName}</strong>!
-      </p>
-      <p>
-        You've enrolled in: <strong>{formData.course}</strong>
-      </p>
-      <p>
-        We’ll contact you at: <strong>{formData.phone}</strong>
-      </p>
+      <p>Welcome, <strong>{formData.firstName} {formData.secondName}</strong>!</p>
+      <p>You've enrolled in: <strong>{formData.course}</strong></p>
+      <p>We’ll contact you at: <strong>{formData.phone}</strong></p>
       <p>Nationality: <strong>{formData.nationality}</strong></p>
-      <button className="reset-btn" onClick={onReset}>
-        Close
-      </button>
+      <button className="reset-btn" onClick={onReset}>Close</button>
     </div>
   );
 };
@@ -31,42 +22,53 @@ function EnrollmentForm({ selectedCourse = '' }) {
     secondName: '',
     phone: '',
     course: selectedCourse || '',
-    nationality: '',
+    nationality: ''
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [error, setError] = useState('');
 
   const courses = [
     'Ms. Office suite',
     'Web Development',
     'Graphic Design',
     'Fundamentals of IT',
-    'Web Design & Development',
+    'Web Design & Development'
   ];
 
   useEffect(() => {
     if (selectedCourse) {
-      setFormData((prev) => ({ ...prev, course: selectedCourse }));
+      setFormData(prev => ({ ...prev, course: selectedCourse }));
     }
   }, [selectedCourse]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setError('');
 
     try {
       await addDoc(collection(db, 'admissions'), {
         ...formData,
-        submittedAt: Timestamp.now(),
+        submittedAt: serverTimestamp(),
       });
       setIsSubmitted(true);
-    } catch (error) {
-      console.error('Error saving admission:', error);
-      alert('Something went wrong. Please try again.');
+      setIsSubmitting(false);
+
+      // Auto-close the success message after 3 seconds
+      setTimeout(() => {
+        handleReset();
+      }, 3000);
+    } catch (err) {
+      console.error("Error submitting admission:", err);
+      setError('Failed to submit. Please try again.');
+      setIsSubmitting(false);
     }
   };
 
@@ -76,9 +78,10 @@ function EnrollmentForm({ selectedCourse = '' }) {
       secondName: '',
       phone: '',
       course: selectedCourse || '',
-      nationality: '',
+      nationality: ''
     });
     setIsSubmitted(false);
+    setError('');
   };
 
   return (
@@ -123,9 +126,7 @@ function EnrollmentForm({ selectedCourse = '' }) {
           >
             <option value="">-- Select a course --</option>
             {courses.map((course, idx) => (
-              <option key={idx} value={course}>
-                {course}
-              </option>
+              <option key={idx} value={course}>{course}</option>
             ))}
           </select>
 
@@ -138,9 +139,10 @@ function EnrollmentForm({ selectedCourse = '' }) {
             required
           />
 
-          <button type="submit" className="submit-btn">
-            Submit
+          <button type="submit" className="submit-btn" disabled={isSubmitting}>
+            {isSubmitting ? 'Submitting...' : 'Submit'}
           </button>
+          {error && <p className="error-msg">{error}</p>}
         </form>
       ) : (
         <Admit formData={formData} onReset={handleReset} />
