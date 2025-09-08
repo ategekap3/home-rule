@@ -1,19 +1,21 @@
-// src/pages/Courses.jsx
 import { useState } from 'react';
 import CourseCard from '../components/CourseCard';
 import EnrollmentForm from '../components/EnrollmentForm';
+
+// Import images correctly
 import img1 from '../assets/img1.jpg';
 import img2 from '../assets/img2.jpg';
 import img3 from '../assets/img3.jpg';
+import img4 from '../assets/img4.jpeg';
 
 const courses = [
-  { name: 'Fundamentals of IT', fees: 'UGX.450K', image: '.assets/HH.webp' },
-  { name: 'Graphics Design', fees: 'UGX.800K', image: '/assests/img1.jpg' },
-  { name: 'Ms. Office Suite', fees: 'UGX.500K', image: '/science.jpg' },
-  { name: 'Programming', fees: 'UGX.1000K', image: '.assests/img2.jpg' }
+  { name: 'Fundamentals of IT', fees: 'UGX 450', image: img1 },
+  { name: 'Graphics Design', fees: 'UGX 800', image: img2 },
+  { name: 'PROGRAMMING', fees: 'UGX. 1000', image: img3 },
+  { name: 'MS.OFFICE', fees: 'UGX. 500', image: img4 },
 ];
 
-const Courses = ({ addAdmission }) => {
+const Courses = () => {
   const [selectedCourse, setSelectedCourse] = useState(null);
 
   return (
@@ -30,8 +32,7 @@ const Courses = ({ addAdmission }) => {
           <h3>Enroll in {selectedCourse.name}</h3>
           <EnrollmentForm
             selectedCourse={selectedCourse.name}
-            addAdmission={(data) => {
-              addAdmission(data);
+            onFormSubmit={(data) => {
               alert(`Form submitted for ${data.course}`);
               console.log('Enrollment Data:', data);
               setSelectedCourse(null); // close form after submission

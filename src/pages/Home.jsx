@@ -1,5 +1,3 @@
-// src/pages/Home.jsx
-
 import React from "react";
 import EnrollmentForm from "../components/EnrollmentForm";
 import ServicesNav from "../components/ServicesNav";
@@ -7,6 +5,25 @@ import ServiceSection from "../components/ServicesSection";
 import Gallery from "./Gallery";
 import Courses from "./Courses";
 import WhatsAppButton from "../components/WhatsAppButton";
+
+// ✅ Import images
+
+// Computer Repair
+import repair1 from '../assets/repair1.jpeg';
+import repair2 from '../assets/repair2.jpeg';
+import repair3 from '../assets/repair3.jpeg';
+
+// Software Installation
+import software1 from '../assets/software1.jpeg';
+import software2 from '../assets/software2.jpeg';
+
+// Hardware Support
+import hardware1 from '../assets/hardware1.jpeg';
+import hardware2 from '../assets/hardware2.jpeg';
+
+// Video Editing
+import editing1 from '../assets/editing1.jpeg';
+import editing2 from '../assets/editing2.jpeg';
 
 const Home = () => {
   const onFormSubmit = (formData) => {
@@ -27,38 +44,25 @@ const Home = () => {
       <ServiceSection
         id="computer-repair"
         title="Computer Repair"
-        images={[
-          '/images/repair1.jpg',
-          '/images/repair2.jpg',
-          '/images/repair3.jpg'
-        ]}
+        images={[repair1, repair2, repair3]}
       />
 
       <ServiceSection
         id="software-installation"
         title="Software Installation"
-        images={[
-          '/images/software1.jpg',
-          '/images/software2.jpg'
-        ]}
+        images={[software1, software2]}
       />
 
       <ServiceSection
         id="hardware"
         title="Hardware Support"
-        images={[
-          '/images/hardware1.jpg',
-          '/images/hardware2.jpg'
-        ]}
+        images={[hardware1, hardware2]}
       />
 
       <ServiceSection
         id="editing"
         title="Video Editing"
-        images={[
-          '/images/editing1.jpg',
-          '/images/editing2.jpg'
-        ]}
+        images={[editing1, editing2]}
       />
 
       {/* Additional content */}

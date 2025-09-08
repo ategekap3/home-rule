@@ -1,86 +1,60 @@
-/* src/pages/Admin.css */
-
-.admin-login-container, .admin-container {
-  max-width: 600px;
-  margin: 40px auto;
-  font-family: Arial, sans-serif;
-  padding: 20px;
-  background: #fafafa;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+.table-wrapper {
+  overflow-x: auto;
+  margin-top: 20px;
 }
 
-.admin-login-container h2,
-.admin-container h2 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #222;
-}
-
-.admin-login-form input {
+.admissions-table {
   width: 100%;
-  padding: 10px 14px;
-  margin-bottom: 15px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-}
-
-.admin-login-form button {
-  width: 100%;
-  padding: 10px;
-  background-color: #007bff;
-  border: none;
-  color: white;
-  font-weight: 700;
-  font-size: 1rem;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.admin-login-form button:hover {
-  background-color: #0056b3;
-}
-
-.error-msg {
-  color: #b00020;
-  font-weight: 600;
-  margin-top: 8px;
-  text-align: center;
-}
-
-.admissions-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.admission-card {
+  border-collapse: collapse;
   background: #fff;
-  border-radius: 6px;
-  padding: 15px 20px;
-  margin-bottom: 15px;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+  font-size: 14px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.admission-header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 8px;
-  font-size: 0.9rem;
-  color: #666;
+.admissions-table th,
+.admissions-table td {
+  padding: 12px 15px;
+  border: 1px solid #ccc;
+  text-align: left;
 }
 
-.admission-info p {
-  margin: 4px 0;
-  font-size: 1rem;
-  color: #333;
+.admissions-table th {
+  background-color: #f4f4f4;
+  font-weight: bold;
 }
 
-.admission-number {
-  font-weight: 700;
+.admissions-table td button {
+  margin-right: 8px;
+  padding: 4px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  background-color: #eee;
+  border: 1px solid #ccc;
 }
 
-.admission-date {
-  font-style: italic;
+.edit-form {
+  margin-top: 30px;
+  padding: 15px;
+  background-color: #fafafa;
+  border: 1px solid #ddd;
+}
+
+.edit-form input {
+  display: block;
+  margin-bottom: 10px;
+  padding: 8px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.edit-buttons button {
+  margin-right: 10px;
+}
+
+.logout-btn {
+  background-color: #f44336;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
 }
