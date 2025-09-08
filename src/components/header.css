@@ -1,0 +1,102 @@
+/* Reset margin and padding */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.header {
+  background: linear-gradient(90deg, #0f2027, #203a43, #2c5364);
+  color: #f0f0f0;
+  padding: 0.5rem 1rem;
+  position: relative;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  height: 50px;
+}
+
+/* Logo and title inline */
+.header-top {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex-grow: 1;
+}
+
+.header-top img {
+  width: 40px;   /* smaller logo */
+  height: 40px;
+  border-radius: 6px;
+  box-shadow: 0 0 6px rgba(255 255 255 / 0.2);
+}
+
+.header-top h1 {
+  font-size: 1.1rem;  /* smaller font */
+  font-weight: 700;
+  white-space: nowrap;
+  text-shadow: 0 0 4px rgba(75, 210, 247, 0.7);
+  color: #cdeffd;
+}
+
+/* Hide header-info in this small header version */
+/* If you want to show it somewhere else, consider a collapsible panel */
+.header-info {
+  display: none;
+}
+
+/* Hamburger Menu Icon */
+.menu-icon {
+  cursor: pointer;
+  width: 28px;
+  height: 22px;
+  z-index: 1100;
+  display: block;
+}
+
+.menu-icon div {
+  width: 100%;
+  height: 3px;
+  background-color: #f0f0f0;
+  margin: 4px 0;
+  border-radius: 2px;
+  transition: 0.4s;
+}
+
+/* Animate hamburger menu into X */
+.change.bar1 {
+  transform: rotate(-45deg) translate(-6px, 5px);
+  background-color: #4bd2f7;
+}
+
+.change.bar2 {
+  opacity: 0;
+}
+
+.change.bar3 {
+  transform: rotate(45deg) translate(-6px, -5px);
+  background-color: #4bd2f7;
+}
+
+/* Responsive tweaks */
+@media (max-width: 480px) {
+  .header {
+    height: 48px;
+    padding: 0.4rem 1rem;
+  }
+
+  .header-top img {
+    width: 35px;
+    height: 35px;
+  }
+
+  .header-top h1 {
+    font-size: 1rem;
+  }
+}
