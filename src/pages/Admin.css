@@ -1,87 +1,105 @@
-/* ---------- GLOBAL ---------- */
-body {
-  margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f4f6f8;
-  color: #2c3e50;
-}
+/* Admin.css */
 
-/* ---------- LOGIN FORM ---------- */
 .admin-login-container {
   max-width: 400px;
-  margin: 100px auto;
-  background-color: #ffffff;
+  margin: 3rem auto;
   padding: 2rem;
+  border: 1px solid #ddd;
   border-radius: 10px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  background: #f9f9f9;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   text-align: center;
 }
 
 .admin-login-form input {
+  display: block;
   width: 100%;
-  padding: 0.75rem;
-  margin: 0.5rem 0;
+  padding: 0.6rem;
+  margin: 0.8rem 0;
   border: 1px solid #ccc;
-  border-radius: 6px;
+  border-radius: 5px;
   font-size: 1rem;
 }
 
 .admin-login-form button {
-  width: 100%;
-  padding: 0.75rem;
-  background-color: #3498db;
+  background-color: #4a90e2;
+  color: white;
+  padding: 0.7rem 1.4rem;
   border: none;
-  color: #fff;
-  font-size: 1rem;
-  border-radius: 6px;
+  border-radius: 5px;
+  font-size: 1.1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 .admin-login-form button:hover {
-  background-color: #2980b9;
+  background-color: #357abd;
 }
 
 .error-msg {
-  color: red;
-  margin-top: 1rem;
-  font-size: 0.9rem;
+  color: #e74c3c;
+  margin-top: 0.5rem;
+  font-weight: 600;
 }
 
-/* ---------- ADMIN CONTAINER ---------- */
+/* Main Admin Container */
+
 .admin-container {
-  padding: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
+  max-width: 95vw;
+  margin: 2rem auto;
+  padding: 1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
 }
 
 .admin-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .admin-header h2 {
-  font-size: 2rem;
-  font-weight: 600;
+  margin: 0;
 }
 
-.logout-btn {
-  padding: 0.5rem 1rem;
+.logout-btn,
+.export-btn {
   background-color: #e74c3c;
-  border: none;
   color: white;
-  font-size: 1rem;
+  border: none;
+  padding: 0.5rem 1.2rem;
   border-radius: 6px;
   cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  margin-left: 0.5rem;
+}
+
+.export-btn {
+  background-color: #3498db;
 }
 
 .logout-btn:hover {
   background-color: #c0392b;
 }
 
-/* ---------- ADMISSIONS TABLE ---------- */
+.export-btn:hover {
+  background-color: #2980b9;
+}
+
+.admin-search-input {
+  width: 100%;
+  max-width: 350px;
+  padding: 0.5rem 0.8rem;
+  margin-bottom: 1rem;
+  border: 1px solid #bbb;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
 .table-wrapper {
   overflow-x: auto;
 }
@@ -89,129 +107,137 @@ body {
 .admissions-table {
   width: 100%;
   border-collapse: collapse;
-  background-color: white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-  border-radius: 10px;
-  overflow: hidden;
+  margin-bottom: 1rem;
+  min-width: 700px;
 }
 
 .admissions-table th,
 .admissions-table td {
-  padding: 1rem;
+  border: 1px solid #ddd;
+  padding: 0.6rem 1rem;
   text-align: left;
-  border-bottom: 1px solid #f0f0f0;
 }
 
 .admissions-table th {
-  background-color: #3498db;
+  background-color: #4a90e2;
   color: white;
-  font-weight: 500;
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
-.admissions-table tr:hover {
-  background-color: #f9f9f9;
+.admissions-table tbody tr:nth-child(even) {
+  background-color: #f2f6fc;
+}
+
+.admissions-table tbody tr:hover {
+  background-color: #d1e3ff;
 }
 
 .admissions-table button {
-  margin-right: 0.5rem;
-  padding: 0.4rem 0.8rem;
-  font-size: 0.9rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.admissions-table button:first-child {
-  background-color: #f1c40f;
+  background-color: #4a90e2;
   color: white;
-}
-
-.admissions-table button:first-child:hover {
-  background-color: #d4ac0d;
+  border: none;
+  padding: 0.3rem 0.8rem;
+  margin-right: 0.3rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
 }
 
 .admissions-table button:last-child {
   background-color: #e74c3c;
+  margin-right: 0;
+}
+
+.admissions-table button:hover {
+  opacity: 0.85;
+}
+
+/* Pagination */
+
+.pagination {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.pagination button {
+  background-color: #eee;
+  border: none;
+  margin: 0 0.25rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.pagination button.active,
+.pagination button:hover {
+  background-color: #4a90e2;
   color: white;
 }
 
-.admissions-table button:last-child:hover {
-  background-color: #c0392b;
-}
+/* Edit form */
 
-/* ---------- EDIT FORM ---------- */
 .edit-form {
-  background-color: #ffffff;
-  padding: 2rem;
-  margin-top: 2rem;
+  max-width: 500px;
+  margin: 1rem auto 3rem;
+  padding: 1rem 1.5rem;
+  border: 1px solid #bbb;
   border-radius: 10px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
+  background-color: #f9f9f9;
+  box-shadow: 0 0 12px rgba(74, 144, 226, 0.3);
 }
 
 .edit-form h3 {
+  margin-top: 0;
   margin-bottom: 1rem;
-  font-size: 1.5rem;
+  color: #4a90e2;
   text-align: center;
 }
 
 .edit-form input {
   width: 100%;
-  padding: 0.75rem;
+  padding: 0.5rem 0.8rem;
   margin-bottom: 1rem;
-  border: 1px solid #ccc;
+  border: 1px solid #bbb;
   border-radius: 6px;
   font-size: 1rem;
 }
 
 .edit-buttons {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   gap: 1rem;
 }
 
 .edit-buttons button {
-  flex: 1;
-  padding: 0.75rem;
-  font-size: 1rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
   border: none;
-  border-radius: 6px;
   cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
 }
 
-.edit-buttons button[type="submit"] {
-  background-color: #2ecc71;
+.edit-buttons button[type='submit'] {
+  background-color: #4a90e2;
   color: white;
 }
 
-.edit-buttons button[type="submit"]:hover {
-  background-color: #27ae60;
+.edit-buttons button[type='submit']:hover {
+  background-color: #357abd;
 }
 
-.edit-buttons button[type="button"] {
-  background-color: #bdc3c7;
-  color: #2c3e50;
+.edit-buttons button[type='button'] {
+  background-color: #bbb;
+  color: #333;
 }
 
-.edit-buttons button[type="button"]:hover {
-  background-color: #95a5a6;
-}
-
-/* ---------- RESPONSIVE ---------- */
-@media (max-width: 768px) {
-  .admin-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
-
-  .edit-buttons {
-    flex-direction: column;
-  }
-
-  .admin-container {
-    padding: 1rem;
-  }
+.edit-buttons button[type='button']:hover {
+  background-color: #999;
 }
