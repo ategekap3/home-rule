@@ -15,6 +15,9 @@ import {
   signOut,
   onAuthStateChanged,
 } from 'firebase/auth';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { unparse } from 'papaparse';
 
 const Admin = () => {
   const [user, setUser] = useState(null);
@@ -23,6 +26,9 @@ const Admin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [authError, setAuthError] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
@@ -35,7 +41,6 @@ const Admin = () => {
     if (!user) return;
 
     const q = query(collection(db, 'admissions'), orderBy('submittedAt', 'desc'));
-
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const data = snapshot.docs.map((doc) => ({
         id: doc.id,
@@ -53,19 +58,23 @@ const Admin = () => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       setAuthError('');
+      toast.success('Login successful!');
     } catch (error) {
       setAuthError('Invalid email or password');
+      toast.error('Login failed');
     }
   };
 
   const handleLogout = async () => {
     await signOut(auth);
     setUser(null);
+    toast.info('Logged out');
   };
 
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this admission?')) {
       await deleteDoc(doc(db, 'admissions', id));
+      toast.success('Deleted successfully!');
     }
   };
 
@@ -89,7 +98,34 @@ const Admin = () => {
       nationality: editingEntry.nationality,
     });
     setEditingEntry(null);
+    toast.info('Updated successfully!');
   };
+
+  const handleExport = () => {
+    const csv = unparse(admissions);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'admissions.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    toast.success('CSV exported!');
+  };
+
+  const filteredAdmissions = admissions.filter((entry) =>
+    `${entry.firstName} ${entry.secondName} ${entry.course}`
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
+  );
+
+  const indexOfLast = currentPage * itemsPerPage;
+  const indexOfFirst = indexOfLast - itemsPerPage;
+  const currentAdmissions = filteredAdmissions.slice(indexOfFirst, indexOfLast);
+  const totalPages = Math.ceil(filteredAdmissions.length / itemsPerPage);
 
   if (!user) {
     return (
@@ -113,6 +149,7 @@ const Admin = () => {
           <button type="submit">Login</button>
           {authError && <p className="error-msg">{authError}</p>}
         </form>
+        <ToastContainer />
       </div>
     );
   }
@@ -121,43 +158,68 @@ const Admin = () => {
     <div className="admin-container">
       <div className="admin-header">
         <h2>All Admitted Students</h2>
-        <button onClick={handleLogout} className="logout-btn">Logout</button>
+        <div>
+          <button onClick={handleExport} className="export-btn">Export CSV</button>
+          <button onClick={handleLogout} className="logout-btn">Logout</button>
+        </div>
       </div>
 
-      {admissions.length === 0 ? (
-        <p>No admissions yet.</p>
+      <input
+        type="text"
+        placeholder="Search by name or course"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="admin-search-input"
+      />
+
+      {filteredAdmissions.length === 0 ? (
+        <p>No matching admissions.</p>
       ) : (
-        <div className="table-wrapper">
-          <table className="admissions-table">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Course</th>
-                <th>Phone</th>
-                <th>Nationality</th>
-                <th>Submitted At</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {admissions.map((entry, idx) => (
-                <tr key={entry.id}>
-                  <td>{idx + 1}</td>
-                  <td>{entry.firstName} {entry.secondName}</td>
-                  <td>{entry.course}</td>
-                  <td>{entry.phone}</td>
-                  <td>{entry.nationality}</td>
-                  <td>{entry.submittedAt.toLocaleString()}</td>
-                  <td>
-                    <button onClick={() => handleEdit(entry)}>Edit</button>
-                    <button onClick={() => handleDelete(entry.id)}>Delete</button>
-                  </td>
+        <>
+          <div className="table-wrapper">
+            <table className="admissions-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Course</th>
+                  <th>Phone</th>
+                  <th>Nationality</th>
+                  <th>Submitted At</th>
+                  <th>Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {currentAdmissions.map((entry, idx) => (
+                  <tr key={entry.id}>
+                    <td>{indexOfFirst + idx + 1}</td>
+                    <td>{entry.firstName} {entry.secondName}</td>
+                    <td>{entry.course}</td>
+                    <td>{entry.phone}</td>
+                    <td>{entry.nationality}</td>
+                    <td>{entry.submittedAt.toLocaleString()}</td>
+                    <td>
+                      <button onClick={() => handleEdit(entry)}>Edit</button>
+                      <button onClick={() => handleDelete(entry.id)}>Delete</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="pagination">
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i}
+                className={i + 1 === currentPage ? 'active' : ''}
+                onClick={() => setCurrentPage(i + 1)}
+              >
+                {i + 1}
+              </button>
+            ))}
+          </div>
+        </>
       )}
 
       {editingEntry && (
@@ -204,6 +266,8 @@ const Admin = () => {
           </div>
         </form>
       )}
+
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 };
