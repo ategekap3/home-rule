@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Navbar from './components/Navbar';
-import Header from './components/Header';
+import Counter from './components/Counter';
 import Home from './pages/Home';
 import Courses from './pages/Courses';
 import Admin from './pages/Admin';
@@ -28,7 +28,7 @@ function App() {
 
   return (
     <Router>
-      <Header />
+      <Counter/>
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
