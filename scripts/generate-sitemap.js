@@ -1,9 +1,9 @@
-const { SitemapStream, streamToPromise } = require('sitemap');
-const { createWriteStream } = require('fs');
-const path = require('path');
+import { SitemapStream, streamToPromise } from 'sitemap';
+import { createWriteStream } from 'node:fs';
+import { resolve } from 'node:path';
 
 (async () => {
-  // List all your site URLs here
+  // List of your site URLs for sitemap
   const links = [
     { url: '/', changefreq: 'weekly', priority: 1.0 },
     { url: '/Gallery', changefreq: 'monthly', priority: 0.8 },
@@ -12,16 +12,13 @@ const path = require('path');
   ];
 
   const sitemapStream = new SitemapStream({ hostname: 'https://www.moderncomputerworldug.com' });
-
-  const writeStream = createWriteStream(path.resolve(__dirname, '../public/sitemap.xml'));
+  const writeStream = createWriteStream(resolve('public', 'sitemap.xml'));
 
   sitemapStream.pipe(writeStream);
-
   links.forEach(link => sitemapStream.write(link));
-
   sitemapStream.end();
 
   await streamToPromise(writeStream);
 
-  console.log('Sitemap generated at public/sitemap.xml');
+  console.log('✅ Sitemap generated at public/sitemap.xml');
 })();
