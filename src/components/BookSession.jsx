@@ -43,6 +43,11 @@ function BookSession() {
       if (response.ok) {
         setSubmitted(true);
         setFormData({ name: '', email: '', date: '', time: '' });
+
+        // Auto-close modal after 3 seconds
+        setTimeout(() => {
+          setModalOpen(false);
+        }, 3000);
       } else {
         alert('Something went wrong. Please try again.');
       }
