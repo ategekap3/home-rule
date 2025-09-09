@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Navbar from './components/Navbar';
-import Header from './components/Header';
+import Header from './components/header';
 import Home from './pages/Home';
 import Courses from './pages/Courses';
 import Admin from './pages/Admin';
@@ -12,6 +12,7 @@ import WhatsAppButton from './components/WhatsAppButton';
 import Footer from './components/Footer';
 
 import Enroll from './pages/enroll-now';
+import BookSession from './components/BookSession';
 
 function App() {
   const [admissions, setAdmissions] = useState([]);
@@ -40,6 +41,7 @@ function App() {
         {/* Admin receives admissions */}
         <Route path="/admin" element={<Admin admissions={admissions} />} />
       </Routes>
+      <BookSession/>
       <WhatsAppButton />
       <Footer />
     </Router>
