@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import Navbar from './Components/Navbar';
+import Navbar from './components/Navbar';
 import Counter from './components/Counter';
 import Home from './pages/Home';
 import Courses from './pages/Courses';
