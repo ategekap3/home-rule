@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import './ServicesSection.css';
 
-const ServiceSection = ({ id, title, images = [] }) => {
+const ServiceSection = ({ id, title, images = [], bgColor = "#fff" }) => {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [activeImage, setActiveImage] = useState(null);
 
@@ -16,22 +16,16 @@ const ServiceSection = ({ id, title, images = [] }) => {
   };
 
   return (
-    <section id={id} className="service-section">
+    <section id={id} className="service-section" style={{ backgroundColor: bgColor }}>
       <h2>{title}</h2>
       <div className="image-grid">
         {images.map((img, index) => (
-          <div
-            key={index}
-            className="image-wrapper"
-            onClick={() => openLightbox(img)}
-          >
+          <div key={index} className="image-wrapper" onClick={() => openLightbox(img)}>
             <img src={img} alt={`${title} ${index + 1}`} />
-            <div className="caption">{`${title} ${index + 1}`}</div>
           </div>
         ))}
       </div>
 
-      {/* Lightbox Modal */}
       {lightboxOpen && (
         <div className="lightbox-overlay" onClick={closeLightbox}>
           <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>

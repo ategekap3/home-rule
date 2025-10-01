@@ -1,7 +1,7 @@
-.navbar {
+.top-nav {
   position: sticky;
   top: 0;
-  background: #1e3a8a;
+  background: #1e3a8a; /* solid blue */
   color: white;
   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
   z-index: 100;
@@ -26,16 +26,15 @@
   list-style: none;
 }
 
-.nav-link {
-  text-decoration: none;
+.nav-links li {
+  cursor: pointer;
   font-weight: 600;
-  color: white;
-  transition: color 0.3s, border-bottom 0.3s;
   padding-bottom: 4px;
+  transition: color 0.3s, border-bottom 0.3s;
 }
 
-.nav-link.active,
-.nav-link:hover {
+.nav-links li:hover,
+.nav-links li.active {
   color: #fbbf24;
   border-bottom: 2px solid #fbbf24;
 }
@@ -101,12 +100,6 @@
   color: #facc15;
 }
 
-.mobile-overlay li .nav-link {
-  font-size: 2rem;
-  color: #facc15;
-  text-decoration: none;
-}
-
 /* Mobile styles */
 @media (max-width: 768px) {
   .nav-links {
@@ -115,28 +108,4 @@
   .hamburger {
     display: flex;
   }
-}
-/* Logo + Info */
-.logo-info {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.school-logo {
-  width: 80px;
-  height: auto;
-  border-radius: 8px;
-}
-
-.school-text h1 {
-  font-size: 1.2rem;
-  margin: 0;
-  color: #facc15;
-}
-
-.school-text p {
-  margin: 2px 0;
-  font-size: 0.8rem;
-  color: #fff;
 }

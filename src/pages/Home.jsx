@@ -1,69 +1,73 @@
-import React from "react";
-import EnrollmentForm from "../components/EnrollmentForm";
-import ServicesNav from "../components/ServicesNav";
-import ServiceSection from "../components/ServicesSection";
-import Gallery from "./Gallery";
+import React, { useEffect } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css";
+
 import Courses from "./Courses";
+import ServicesSection from "../components/ServicesSection";
+import Gallery from "./Gallery";
+import LaptopShop from "../components/ShopSection";
 import WhatsAppButton from "../components/WhatsAppButton";
 
 import repair1 from '../assets/repair1.jpeg';
 import repair2 from '../assets/repair2.jpeg';
 import repair3 from '../assets/repair3.jpeg';
-
 import software1 from '../assets/software1.jpeg';
 import software2 from '../assets/software2.jpeg';
-
 import hardware1 from '../assets/hardware1.jpeg';
 import hardware2 from '../assets/hardware2.jpeg';
-
 import editing1 from '../assets/editing1.jpeg';
 import editing2 from '../assets/editing2.jpeg';
 
 import './Home.css';
 
 const Home = () => {
-  const onFormSubmit = (formData) => {
-    alert('Form submitted! The admin will be notified.');
-    console.log('Enrollment Form Data:', formData);
-  };
+  useEffect(() => {
+    AOS.init({ duration: 800, once: true });
+  }, []);
 
   return (
     <div className="home-container">
-      <div className="tech-background"></div>
 
-      <h1>Welcome to Our School</h1>
-      <h3>We are the leading computer tutors and IT service providers to the low-budget market</h3>
-      <p>Enroll in your desired course below.</p>
+      {/* Hero Section */}
+      <section className="hero-section" data-aos="fade-down" style={{ backgroundImage: "url('../assets/hero-bg.jpeg')" }}>
+        <div className="hero-overlay">
+          <div className="hero-content">
+            <h1>Modern Computer World UG</h1>
+            <p>Empowering you with the latest IT skills and affordable technology solutions.</p>
+            <a href="#courses" className="btn-primary">Explore Courses</a>
+          </div>
+        </div>
+      </section>
 
-      <ServicesNav />
+      {/* Courses Section */}
+      <section id="courses" className="courses-section" data-aos="fade-up" style={{ backgroundColor: "#f9fafb" }}>
+        <h2>Our Courses</h2>
+        <Courses />
+      </section>
 
-      <ServiceSection
-        id="computer-repair"
-        title="Computer Repair"
-        images={[repair1, repair2, repair3]}
-      />
+      {/* Laptop Shop Section */}
+      <section id="shop" className="shop-section" data-aos="fade-up" style={{ backgroundColor: "#eef2ff" }}>
+        <h2>Shop Laptops</h2>
+        <LaptopShop />
+      </section>
 
-      <ServiceSection
-        id="software-installation"
-        title="Software Installation"
-        images={[software1, software2]}
-      />
+      {/* Services Section */}
+      <section id="services" className="services-section" data-aos="fade-up" style={{ backgroundColor: "#fff7ed" }}>
+        <h2>Our Services</h2>
+        <div className="services-grid">
+          <ServicesSection id="computer-repair" title="Computer Repair" images={[repair1, repair2, repair3]} bgColor="#fff7ed" />
+          <ServicesSection id="software-installation" title="Software Installation" images={[software1, software2]} bgColor="#fffbe6" />
+          <ServicesSection id="hardware" title="Hardware Support" images={[hardware1, hardware2]} bgColor="#ecfdf5" />
+          <ServicesSection id="editing" title="Video Editing" images={[editing1, editing2]} bgColor="#fff1f2" />
+        </div>
+      </section>
 
-      <ServiceSection
-        id="hardware"
-        title="Hardware Support"
-        images={[hardware1, hardware2]}
-      />
+      {/* Gallery Section */}
+      <section id="gallery" className="gallery-section" data-aos="fade-up" style={{ backgroundColor: "#f0f9ff" }}>
+        <h2>Gallery</h2>
+        <Gallery />
+      </section>
 
-      <ServiceSection
-        id="editing"
-        title="Video Editing"
-        images={[editing1, editing2]}
-      />
-
-      <Gallery />
-      <Courses />
-      <EnrollmentForm onFormSubmit={onFormSubmit} />
       <WhatsAppButton />
     </div>
   );

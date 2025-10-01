@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import Navbar from './components/Navbar';
+import Navbar from './Components/Navbar';
 import Counter from './components/Counter';
 import Home from './pages/Home';
 import Courses from './pages/Courses';
@@ -28,8 +28,7 @@ function App() {
 
   return (
     <Router>
-      <Counter/>
-      <Navbar />
+    <Navbar/>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/Gallery" element={<Gallery />} />

@@ -50,6 +50,7 @@ const Gallery = () => {
             <button className="close-button" onClick={() => setSelectedImage(null)}>Close</button>
           </div>
         </div>
+      
       )}
     </>
   );

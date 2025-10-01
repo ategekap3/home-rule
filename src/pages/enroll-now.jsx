@@ -1,5 +1,6 @@
 // src/pages/enroll-now.jsx
 import React from 'react';
+import Navbar from '../Components/Navbar';
 import EnrollmentForm from '../components/EnrollmentForm';
 
 function Enroll({ addAdmission }) {

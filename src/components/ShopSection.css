@@ -1,0 +1,92 @@
+/* Container grid */
+.p-6 {
+  padding: 1.5rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Laptop card */
+.border {
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.border:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.text-center {
+  text-align: center;
+  padding: 1rem;
+}
+
+/* Laptop image */
+.border img {
+  width: 150px;       /* smaller than before */
+  height: 150px;      /* maintain square */
+  object-fit: contain; /* scale down without cropping */
+  margin: 0 auto 1rem;
+  border-radius: 8px;
+}
+
+/* Laptop title */
+.text-xl {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+/* Description */
+.text-gray-600 {
+  color: #4b5563;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Price */
+.text-lg {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-top: 0.5rem;
+  color: #111827;
+}
+
+/* Button */
+button {
+  margin-top: 0.75rem;
+  background-color: #2563eb;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background-color: #1e40af;
+}
+
+/* Responsive for small screens */
+@media (max-width: 768px) {
+  .border img {
+    width: 120px;
+    height: 120px;
+  }
+
+  .text-xl {
+    font-size: 1rem;
+  }
+
+  .text-lg {
+    font-size: 0.95rem;
+  }
+}
