@@ -1,6 +1,6 @@
 // src/pages/Admin.jsx
 import React, { useState, useEffect, useRef } from "react";
-import { collection, getDocs, query, orderBy, onSnapshot, updateDoc, doc, deleteDoc, addDoc } from "firebase/firestore";
+import { collection, getDocs, query, orderBy, onSnapshot, addDoc } from "firebase/firestore";
 import { db, auth } from "../components/firebase";
 import "./Admin.css";
 
@@ -16,11 +16,11 @@ export default function Admin() {
 
   // Fetch Orders
   useEffect(() => {
-    const q = query(collection(db, "laptopOrders"), orderBy("createdAt", "desc"));
-    const unsubscribe = onSnapshot(q, (snap) => {
+    const fetchOrders = async () => {
+      const snap = await getDocs(collection(db, "laptopOrders"));
       setOrders(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-    });
-    return () => unsubscribe();
+    };
+    fetchOrders();
   }, []);
 
   // Fetch Students
@@ -34,14 +34,14 @@ export default function Admin() {
 
   // Fetch Admissions
   useEffect(() => {
-    const q = query(collection(db, "admissions"), orderBy("submittedAt", "desc"));
-    const unsubscribe = onSnapshot(q, (snap) => {
+    const fetchAdmissions = async () => {
+      const snap = await getDocs(collection(db, "admissions"));
       setAdmissions(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-    });
-    return () => unsubscribe();
+    };
+    fetchAdmissions();
   }, []);
 
-  // Fetch messages
+  // Fetch Messages
   useEffect(() => {
     const q = query(collection(db, "messages"), orderBy("timestamp", "asc"));
     const unsubscribe = onSnapshot(q, (snap) => {
@@ -53,7 +53,8 @@ export default function Admin() {
         allMsgs[studentId].push(data);
       });
       setMessages(allMsgs);
-      // scroll to bottom for each chat
+
+      // Scroll to bottom
       Object.keys(chatRefs.current).forEach(id => {
         chatRefs.current[id]?.scrollTo(0, chatRefs.current[id].scrollHeight);
       });
@@ -61,7 +62,6 @@ export default function Admin() {
     return () => unsubscribe();
   }, []);
 
-  // Send message
   const handleSendMessage = async (studentId) => {
     const text = inputValues[studentId];
     if (!text?.trim()) return;
@@ -73,18 +73,6 @@ export default function Admin() {
       read: false,
     });
     setInputValues(prev => ({ ...prev, [studentId]: "" }));
-  };
-
-  // Delete an order
-  const handleDeleteOrder = async (orderId) => {
-    if (window.confirm("Are you sure you want to delete this order?")) {
-      await deleteDoc(doc(db, "laptopOrders", orderId));
-    }
-  };
-
-  // Update order status
-  const handleUpdateStatus = async (orderId, newStatus) => {
-    await updateDoc(doc(db, "laptopOrders", orderId), { status: newStatus });
   };
 
   const filteredStudents = students.filter(
@@ -99,7 +87,14 @@ export default function Admin() {
       {/* Header */}
       <div className="admin-header">
         <h2>Admin Dashboard</h2>
-        <button className="logout-btn" onClick={() => auth.signOut()}>Logout</button>
+        <button
+          className="logout-btn"
+          onClick={() =>
+            auth.signOut().then(() => window.location.href = '/admin-login')
+          }
+        >
+          Logout
+        </button>
       </div>
 
       {/* Tabs */}
@@ -121,31 +116,17 @@ export default function Admin() {
                 <th>Laptop</th>
                 <th>Price</th>
                 <th>Status</th>
-                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {orders.map(o => (
                 <tr key={o.id}>
-                  <td>{o.customerName}</td>
+                  <td>{o.name}</td>
                   <td>{o.email}</td>
                   <td>{o.phone}</td>
                   <td>{o.laptop?.name || "-"}</td>
                   <td>{o.laptop?.price || "-"}</td>
-                  <td>
-                    <select
-                      value={o.status || "Pending"}
-                      onChange={(e) => handleUpdateStatus(o.id, e.target.value)}
-                    >
-                      <option value="Pending">Pending</option>
-                      <option value="Processing">Processing</option>
-                      <option value="Completed">Completed</option>
-                      <option value="Cancelled">Cancelled</option>
-                    </select>
-                  </td>
-                  <td>
-                    <button onClick={() => handleDeleteOrder(o.id)}>Delete</button>
-                  </td>
+                  <td>{o.status || "Pending"}</td>
                 </tr>
               ))}
             </tbody>
@@ -167,7 +148,7 @@ export default function Admin() {
                 <p><strong>Name:</strong> {s.firstName} {s.lastName}</p>
                 <p><strong>Email:</strong> {s.email}</p>
                 <p><strong>Course:</strong> {s.course}</p>
-                <p><strong>Progress:</strong> {s.progress.join(", ") || "Not started"}</p>
+                <p><strong>Progress:</strong> {s.progress?.join(", ") || "Not started"}</p>
 
                 {/* Chat */}
                 <div className="chat-section">

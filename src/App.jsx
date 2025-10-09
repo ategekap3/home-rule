@@ -7,7 +7,9 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
 import Home from "./pages/Home";
+import EnrollNow from "./pages/enroll-now";
 import Admin from "./pages/Admin";
+import AdminLogin from "./pages/AdminLogin";
 
 import StudentLogin from "./pages/students/StudentLogin";
 import StudentRegister from "./pages/students/StudentRegister";
@@ -16,10 +18,16 @@ import StudentsDashboard from "./pages/students/StudentsDashboard";
 // Firebase
 import { auth } from "./components/firebase";
 
-// Private Route for authenticated students
-const PrivateRoute = ({ children }) => {
+// Protected route for students
+const PrivateStudentRoute = ({ children }) => {
   const user = auth.currentUser;
   return user ? children : <Navigate to="/student-login" replace />;
+};
+
+// Protected route for admin
+const PrivateAdminRoute = ({ children }) => {
+  const user = auth.currentUser;
+  return user ? children : <Navigate to="/admin-login" replace />;
 };
 
 const App = () => {
@@ -27,12 +35,19 @@ const App = () => {
     <Router>
       <Navbar />
       <Routes>
-        {/* Public Routes */}
         <Route path="/" element={<Home />} />
+        <Route path="/enroll-now" element={<EnrollNow />} />
 
-        {/* Replace EnrollNow with StudentRegister */}
-        <Route path="/enroll-now" element={<StudentRegister />} />
-        <Route path="/admin" element={<Admin />} />
+        {/* Admin */}
+        <Route path="/admin-login" element={<AdminLogin />} />
+        <Route
+          path="/admin"
+          element={
+            <PrivateAdminRoute>
+              <Admin />
+            </PrivateAdminRoute>
+          }
+        />
 
         {/* Student Routes */}
         <Route path="/student-login" element={<StudentLogin />} />
@@ -40,9 +55,9 @@ const App = () => {
         <Route
           path="/student-dashboard"
           element={
-            <PrivateRoute>
+            <PrivateStudentRoute>
               <StudentsDashboard />
-            </PrivateRoute>
+            </PrivateStudentRoute>
           }
         />
 
