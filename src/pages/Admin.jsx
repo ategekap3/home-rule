@@ -14,6 +14,14 @@ export default function Admin() {
   const [inputValues, setInputValues] = useState({});
   const chatRefs = useRef({});
 
+  // Redirect if not logged in
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      if (!user) window.location.href = "/admin-login";
+    });
+    return () => unsubscribe();
+  }, []);
+
   // Fetch Orders
   useEffect(() => {
     const fetchOrders = async () => {
@@ -26,7 +34,7 @@ export default function Admin() {
   // Fetch Students
   useEffect(() => {
     const q = query(collection(db, "students"), orderBy("createdAt", "desc"));
-    const unsubscribe = onSnapshot(q, (snap) => {
+    const unsubscribe = onSnapshot(q, snap => {
       setStudents(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
     });
     return () => unsubscribe();
@@ -44,7 +52,7 @@ export default function Admin() {
   // Fetch Messages
   useEffect(() => {
     const q = query(collection(db, "messages"), orderBy("timestamp", "asc"));
-    const unsubscribe = onSnapshot(q, (snap) => {
+    const unsubscribe = onSnapshot(q, snap => {
       const allMsgs = {};
       snap.docs.forEach(docSnap => {
         const data = docSnap.data();
@@ -62,7 +70,7 @@ export default function Admin() {
     return () => unsubscribe();
   }, []);
 
-  const handleSendMessage = async (studentId) => {
+  const handleSendMessage = async studentId => {
     const text = inputValues[studentId];
     if (!text?.trim()) return;
     await addDoc(collection(db, "messages"), {
@@ -77,9 +85,9 @@ export default function Admin() {
 
   const filteredStudents = students.filter(
     s =>
-      s.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      s.lastName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      s.email.toLowerCase().includes(searchQuery.toLowerCase())
+      s.firstName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      s.lastName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      s.email?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -89,9 +97,7 @@ export default function Admin() {
         <h2>Admin Dashboard</h2>
         <button
           className="logout-btn"
-          onClick={() =>
-            auth.signOut().then(() => window.location.href = '/admin-login')
-          }
+          onClick={() => auth.signOut().then(() => window.location.href = "/admin-login")}
         >
           Logout
         </button>
@@ -105,7 +111,7 @@ export default function Admin() {
       </div>
 
       <div className="table-wrapper">
-        {/* Orders */}
+        {/* Orders Table */}
         {activeTab === "orders" && (
           <table>
             <thead>
@@ -133,14 +139,14 @@ export default function Admin() {
           </table>
         )}
 
-        {/* Students */}
+        {/* Students Table with Chat */}
         {activeTab === "students" && (
           <>
             <input
               type="text"
               placeholder="Search by name or email"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={e => setSearchQuery(e.target.value)}
               className="search-input"
             />
             {filteredStudents.map(s => (
@@ -148,7 +154,6 @@ export default function Admin() {
                 <p><strong>Name:</strong> {s.firstName} {s.lastName}</p>
                 <p><strong>Email:</strong> {s.email}</p>
                 <p><strong>Course:</strong> {s.course}</p>
-                <p><strong>Progress:</strong> {s.progress?.join(", ") || "Not started"}</p>
 
                 {/* Chat */}
                 <div className="chat-section">
@@ -163,8 +168,8 @@ export default function Admin() {
                     <input
                       placeholder="Type message..."
                       value={inputValues[s.id] || ""}
-                      onChange={(e) => setInputValues(prev => ({ ...prev, [s.id]: e.target.value }))}
-                      onKeyDown={(e) => { if(e.key==="Enter"){ handleSendMessage(s.id); e.preventDefault(); } }}
+                      onChange={e => setInputValues(prev => ({ ...prev, [s.id]: e.target.value }))}
+                      onKeyDown={e => { if (e.key === "Enter") { handleSendMessage(s.id); e.preventDefault(); } }}
                     />
                     <button onClick={() => handleSendMessage(s.id)}>Send</button>
                   </div>
@@ -174,7 +179,7 @@ export default function Admin() {
           </>
         )}
 
-        {/* Admissions */}
+        {/* Admissions Table */}
         {activeTab === "admissions" && (
           <table>
             <thead>

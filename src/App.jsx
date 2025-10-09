@@ -1,4 +1,3 @@
-// src/App.jsx
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
@@ -8,46 +7,41 @@ import Footer from "./components/Footer";
 
 import Home from "./pages/Home";
 import EnrollNow from "./pages/enroll-now";
-import Admin from "./pages/Admin";
-import AdminLogin from "./pages/AdminLogin";
+import LaptopShop from "./components/ShopSection";
 
+// Students
 import StudentLogin from "./pages/students/StudentLogin";
 import StudentRegister from "./pages/students/StudentRegister";
 import StudentsDashboard from "./pages/students/StudentsDashboard";
 
+// Admin
+import Admin from "./pages/Admin";
+import AdminLogin from "./pages/AdminLogin";
+
 // Firebase
 import { auth } from "./components/firebase";
 
-// Protected route for students
-const PrivateStudentRoute = ({ children }) => {
-  const user = auth.currentUser;
-  return user ? children : <Navigate to="/student-login" replace />;
-};
+// Protect Student Route
+function PrivateStudentRoute({ children }) {
+  if (auth.currentUser) return children;
+  return <Navigate to="/student-login" replace />;
+}
 
-// Protected route for admin
-const PrivateAdminRoute = ({ children }) => {
-  const user = auth.currentUser;
-  return user ? children : <Navigate to="/admin-login" replace />;
-};
+// Protect Admin Route
+function PrivateAdminRoute({ children }) {
+  if (auth.currentUser) return children;
+  return <Navigate to="/admin-login" replace />;
+}
 
-const App = () => {
+function App() {
   return (
     <Router>
       <Navbar />
       <Routes>
+        {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/enroll-now" element={<EnrollNow />} />
-
-        {/* Admin */}
-        <Route path="/admin-login" element={<AdminLogin />} />
-        <Route
-          path="/admin"
-          element={
-            <PrivateAdminRoute>
-              <Admin />
-            </PrivateAdminRoute>
-          }
-        />
+        <Route path="/laptop-shop" element={<LaptopShop />} />
 
         {/* Student Routes */}
         <Route path="/student-login" element={<StudentLogin />} />
@@ -61,12 +55,23 @@ const App = () => {
           }
         />
 
+        {/* Admin Routes */}
+        <Route path="/admin-login" element={<AdminLogin />} />
+        <Route
+          path="/admin"
+          element={
+            <PrivateAdminRoute>
+              <Admin />
+            </PrivateAdminRoute>
+          }
+        />
+
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <Footer />
     </Router>
   );
-};
+}
 
 export default App;

@@ -1,10 +1,10 @@
+// src/components/Navbar.jsx
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import './NavBar.css';
 
 const sections = [
   { id: 'courses', label: 'Courses' },
-  { id: 'shop', label: 'Laptop Shop' }, // ✅ Fixed ID to match Home.jsx
   { id: 'services', label: 'Services' },
 ];
 
@@ -62,14 +62,23 @@ const Navbar = ({ user }) => {
         </div>
 
         <ul className={`nav-links ${isMobileMenuOpen ? 'open' : ''}`}>
-          <li><NavLink to="/home" className="nav-link" onClick={closeMobileMenu}>Home</NavLink></li>
+          <li><NavLink to="/" className="nav-link" onClick={closeMobileMenu}>Home</NavLink></li>
           {sections.map(sec => (
             <li key={sec.id}>
-              <span className={`nav-link ${activeSection === sec.id ? 'active' : ''}`} onClick={() => scrollToSection(sec.id)}>
+              <span
+                className={`nav-link ${activeSection === sec.id ? 'active' : ''}`}
+                onClick={() => scrollToSection(sec.id)}
+              >
                 {sec.label}
               </span>
             </li>
           ))}
+          {/* Laptop Shop Route */}
+          <li>
+            <NavLink to="/shop" className="nav-link" onClick={closeMobileMenu}>
+              Laptop Shop
+            </NavLink>
+          </li>
           {!user && (
             <>
               <li><NavLink to="/student-login" className="nav-link" onClick={closeMobileMenu}>Student Login</NavLink></li>
@@ -77,7 +86,7 @@ const Navbar = ({ user }) => {
             </>
           )}
           {user && (
-            <li><NavLink to="/students/dashboard" className="nav-link" onClick={closeMobileMenu}>Dashboard</NavLink></li>
+            <li><NavLink to="/student-dashboard" className="nav-link" onClick={closeMobileMenu}>Dashboard</NavLink></li>
           )}
           <li><NavLink to="/admin" className="nav-link" onClick={closeMobileMenu}>Admin</NavLink></li>
         </ul>
@@ -97,6 +106,7 @@ const Navbar = ({ user }) => {
               <span className="nav-link" onClick={() => scrollToSection(sec.id)}>{sec.label}</span>
             </li>
           ))}
+          <li><NavLink to="/shop" className="nav-link" onClick={closeMobileMenu}>Laptop Shop</NavLink></li>
           {!user && (
             <>
               <li><NavLink to="/student-login" className="nav-link" onClick={closeMobileMenu}>Student Login</NavLink></li>
@@ -104,7 +114,7 @@ const Navbar = ({ user }) => {
             </>
           )}
           {user && (
-            <li><NavLink to="/students/dashboard" className="nav-link" onClick={closeMobileMenu}>Dashboard</NavLink></li>
+            <li><NavLink to="/student-dashboard" className="nav-link" onClick={closeMobileMenu}>Dashboard</NavLink></li>
           )}
           <li><NavLink to="/admin" className="nav-link" onClick={closeMobileMenu}>Admin</NavLink></li>
         </ul>
