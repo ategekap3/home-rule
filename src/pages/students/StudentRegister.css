@@ -1,0 +1,176 @@
+/* src/pages/students/StudentRegister.css */
+
+.register-container {
+  max-width: 500px;
+  margin: 80px auto 40px auto; /* leave space for navbar */
+  padding: 30px;
+  background-color: #f9fafb;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.register-container h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #1f2937;
+}
+
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.register-form label {
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #374151;
+}
+
+.register-form input,
+.register-form select {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.register-form input:focus,
+.register-form select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+.register-form button {
+  padding: 12px;
+  background-color: #3b82f6;
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.register-form button:hover {
+  background-color: #2563eb;
+}
+
+.register-form .error-message {
+  color: #dc2626;
+  font-size: 13px;
+}
+
+.register-form .success-message {
+  color: #16a34a;
+  font-size: 13px;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .register-container {
+    margin: 60px 20px 40px 20px;
+    padding: 20px;
+  }
+}
+/* StudentPortal.css */
+
+/* Common full-screen background for both pages */
+.student-portal-container {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url('/src/assets/back.jpeg'); /* your background image */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+/* Overlay to darken background for readability */
+.student-portal-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* adjust opacity if needed */
+  z-index: 0;
+}
+
+/* Form styling (applies to login & register forms) */
+.student-form {
+  position: relative;
+  z-index: 1; /* above the overlay */
+  background-color: rgba(255, 255, 255, 0.9); /* semi-transparent */
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Inputs styling */
+.student-form input {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+/* Button styling */
+.btn-primary {
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+/* Error message */
+.error {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+  text-align: center;
+}
+
+/* Heading */
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+/* Responsive for mobile devices */
+@media (max-width: 480px) {
+  .student-form {
+    width: 90%;
+    padding: 30px 20px;
+  }
+
+  .student-form input {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .btn-primary {
+    font-size: 14px;
+    padding: 10px;
+  }
+}

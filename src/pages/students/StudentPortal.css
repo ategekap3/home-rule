@@ -1,0 +1,207 @@
+/* StudentPortal.css */
+
+/* Common full-screen background for login, register, and dashboard */
+.student-portal-container {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-image: url('/src/assets/back.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  padding: 20px;
+  box-sizing: border-box;
+  color: #fff;
+}
+
+/* Overlay for readability */
+.student-portal-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 0;
+}
+
+/* Forms for login/register */
+.student-form {
+  position: relative;
+  z-index: 1;
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  color: #000;
+}
+
+.student-form input,
+.student-form select {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.btn-primary {
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.btn-secondary {
+  padding: 10px 15px;
+  background-color: #dc3545; /* red for delete */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s ease;
+  margin-top: 10px;
+}
+
+.btn-secondary:hover {
+  background-color: #a71d2a;
+}
+
+.logout-btn {
+  padding: 10px 20px;
+  background-color: #28a745; /* green for logout */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 20px;
+  z-index: 1;
+}
+
+.logout-btn:hover {
+  background-color: #1e7e34;
+}
+
+/* Headings */
+h2 {
+  margin-bottom: 20px;
+  z-index: 1;
+}
+
+/* Error / success messages */
+.error, .success-message {
+  font-size: 14px;
+  text-align: center;
+  margin-top: 5px;
+}
+
+.error { color: red; }
+.success-message { color: green; }
+
+/* Student info card */
+.student-info {
+  position: relative;
+  z-index: 1;
+  background-color: rgba(255,255,255,0.9);
+  color: #000;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+}
+
+/* Messages */
+.messages-container {
+  width: 100%;
+  max-width: 600px;
+  position: relative;
+  z-index: 1;
+}
+
+.chat-box {
+  max-height: 250px;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  background: #fff;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.message {
+  padding: 5px 10px;
+  border-radius: 10px;
+  margin: 5px 0;
+  max-width: 70%;
+  display: inline-block;
+}
+
+.from-student {
+  background: #000;
+  text-align: right;
+  float: right;
+  clear: both;
+}
+
+.from-admin {
+  background: #090707;
+  text-align: left;
+  float: left;
+  clear: both;
+}
+
+.chat-form {
+  display: flex;
+  gap: 5px;
+}
+
+.chat-form input {
+  flex: 1;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.chat-form button {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  background: #007bff;
+  color: #fff;
+  cursor: pointer;
+}
+
+.chat-form button:hover {
+  background: #0056b3;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .student-form, .student-info, .messages-container {
+    width: 90%;
+  }
+
+  .btn-primary, .btn-secondary, .logout-btn {
+    font-size: 12px;
+    padding: 8px;
+  }
+}

@@ -6,7 +6,7 @@ import './CustomerOrderModal.css';
 
 const CustomerOrderModal = ({ laptop, onClose }) => {
   const [customer, setCustomer] = useState({
-    name: "",
+    customerName: "",
     email: "",
     phone: "",
     address: ""
@@ -19,13 +19,10 @@ const CustomerOrderModal = ({ laptop, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await addDoc(collection(db, "orders"), {
-        laptop: laptop.name,
-        price: laptop.price,
-        customerName: customer.name,
-        email: customer.email,
-        phone: customer.phone,
-        address: customer.address,
+      await addDoc(collection(db, "laptopOrders"), { // match Admin
+        laptop: { name: laptop.name, price: laptop.price },
+        ...customer,
+        status: "Pending", // default status
         createdAt: serverTimestamp()
       });
       alert(`Order placed successfully for ${laptop.name}!`);
@@ -45,9 +42,9 @@ const CustomerOrderModal = ({ laptop, onClose }) => {
         <form onSubmit={handleSubmit}>
           <input
             type="text"
-            name="name"
+            name="customerName"
             placeholder="Your Name"
-            value={customer.name}
+            value={customer.customerName}
             onChange={handleChange}
             required
           />

@@ -1,4 +1,6 @@
+// src/pages/Home.jsx
 import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
@@ -17,6 +19,7 @@ import hardware1 from '../assets/hardware1.jpeg';
 import hardware2 from '../assets/hardware2.jpeg';
 import editing1 from '../assets/editing1.jpeg';
 import editing2 from '../assets/editing2.jpeg';
+import heroBg from '../assets/hero-gb.jpeg';
 
 import './Home.css';
 
@@ -25,16 +28,35 @@ const Home = () => {
     AOS.init({ duration: 800, once: true });
   }, []);
 
+  const scrollToShop = () => {
+    const shopSection = document.getElementById('shop');
+    if (shopSection) {
+      shopSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="home-container">
-
       {/* Hero Section */}
-      <section className="hero-section" data-aos="fade-down" style={{ backgroundImage: "url('../assets/hero-bg.jpeg')" }}>
+      <section
+        className="hero-section"
+        data-aos="fade-down"
+        style={{ backgroundImage: `url(${heroBg})` }}
+      >
         <div className="hero-overlay">
           <div className="hero-content">
             <h1>Modern Computer World UG</h1>
             <p>Empowering you with the latest IT skills and affordable technology solutions.</p>
-            <a href="#courses" className="btn-primary">Explore Courses</a>
+
+            {/* Hero Buttons */}
+            <div className="hero-buttons">
+              <a href="#courses" className="btn-primary">Explore Courses</a>
+              <Link to="/student-login" className="btn-secondary">Student Login</Link>
+              <Link to="/student-register" className="btn-secondary">Register</Link>
+              <button className="btn-primary" onClick={scrollToShop}>
+                Buy Laptops
+              </button>
+            </div>
           </div>
         </div>
       </section>

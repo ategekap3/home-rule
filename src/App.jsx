@@ -1,50 +1,57 @@
 // src/App.jsx
-import { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
-import Navbar from './components/Navbar';
-import Counter from './components/Counter';
-import Home from './pages/Home';
-import Courses from './pages/Courses';
-import Admin from './pages/Admin';
-import Gallery from './pages/Gallery';
-import WhatsAppButton from './components/WhatsAppButton';
-import Footer from './components/Footer';
+// Components & Pages
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
-import Enroll from './pages/enroll-now';
-import BookSession from './components/BookSession';
+import Home from "./pages/Home";
+import Admin from "./pages/Admin";
 
-function App() {
-  const [admissions, setAdmissions] = useState([]);
+import StudentLogin from "./pages/students/StudentLogin";
+import StudentRegister from "./pages/students/StudentRegister";
+import StudentsDashboard from "./pages/students/StudentsDashboard";
 
-  const addAdmission = (formData) => {
-    const newEntry = {
-      ...formData,
-      id: admissions.length + 1,
-      submittedAt: new Date()
-    };
-    setAdmissions(prev => [...prev, newEntry]);
-  };
+// Firebase
+import { auth } from "./components/firebase";
 
+// Private Route for authenticated students
+const PrivateRoute = ({ children }) => {
+  const user = auth.currentUser;
+  return user ? children : <Navigate to="/student-login" replace />;
+};
+
+const App = () => {
   return (
     <Router>
-    <Navbar/>
+      <Navbar />
       <Routes>
+        {/* Public Routes */}
         <Route path="/" element={<Home />} />
-        <Route path="/Gallery" element={<Gallery />} />
 
-        {/* Pass addAdmission to Courses and Enroll */}
-        <Route path="/courses" element={<Courses addAdmission={addAdmission} />} />
-        <Route path="/enroll-now" element={<Enroll addAdmission={addAdmission} />} />
+        {/* Replace EnrollNow with StudentRegister */}
+        <Route path="/enroll-now" element={<StudentRegister />} />
+        <Route path="/admin" element={<Admin />} />
 
-        {/* Admin receives admissions */}
-        <Route path="/admin" element={<Admin admissions={admissions} />} />
+        {/* Student Routes */}
+        <Route path="/student-login" element={<StudentLogin />} />
+        <Route path="/student-register" element={<StudentRegister />} />
+        <Route
+          path="/student-dashboard"
+          element={
+            <PrivateRoute>
+              <StudentsDashboard />
+            </PrivateRoute>
+          }
+        />
+
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-      <BookSession/>
-      <WhatsAppButton />
       <Footer />
     </Router>
   );
-}
+};
 
 export default App;

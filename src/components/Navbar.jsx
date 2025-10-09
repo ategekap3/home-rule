@@ -4,11 +4,11 @@ import './NavBar.css';
 
 const sections = [
   { id: 'courses', label: 'Courses' },
-  { id: 'laptop-shop', label: 'Laptop Shop' },
+  { id: 'shop', label: 'Laptop Shop' }, // ✅ Fixed ID to match Home.jsx
   { id: 'services', label: 'Services' },
 ];
 
-const Navbar = () => {
+const Navbar = ({ user }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('');
   const [isScrolled, setIsScrolled] = useState(false);
@@ -29,8 +29,6 @@ const Navbar = () => {
         if (el && el.offsetTop <= scrollPos) current = section.id;
       });
       setActiveSection(current);
-
-      // Shrink navbar if scrolled
       setIsScrolled(window.scrollY > 50);
     };
 
@@ -55,8 +53,6 @@ const Navbar = () => {
   return (
     <nav className={`navbar sticky-navbar ${isScrolled ? 'scrolled' : ''}`}>
       <div className={`nav-container ${isScrolled ? 'small' : ''}`}>
-
-        {/* Logo + School Info */}
         <div className="logo-info">
           <img src="/school-logo.jpeg" alt="School Logo" className="school-logo" />
           <div className="school-text">
@@ -65,40 +61,27 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Navigation Links */}
         <ul className={`nav-links ${isMobileMenuOpen ? 'open' : ''}`}>
-          <li>
-            <NavLink
-              to="/"
-              className={({ isActive }) => (isActive && !activeSection ? 'nav-link active' : 'nav-link')}
-              onClick={closeMobileMenu}
-            >
-              Home
-            </NavLink>
-          </li>
+          <li><NavLink to="/home" className="nav-link" onClick={closeMobileMenu}>Home</NavLink></li>
           {sections.map(sec => (
             <li key={sec.id}>
-              <span
-                className={`nav-link ${activeSection === sec.id ? 'active' : ''}`}
-                onClick={() => scrollToSection(sec.id)}
-              >
+              <span className={`nav-link ${activeSection === sec.id ? 'active' : ''}`} onClick={() => scrollToSection(sec.id)}>
                 {sec.label}
               </span>
             </li>
           ))}
-          <li>
-            <NavLink to="/enroll-now" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')} onClick={closeMobileMenu}>
-              Enroll-now
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/admin" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')} onClick={closeMobileMenu}>
-              Admin
-            </NavLink>
-          </li>
+          {!user && (
+            <>
+              <li><NavLink to="/student-login" className="nav-link" onClick={closeMobileMenu}>Student Login</NavLink></li>
+              <li><NavLink to="/student-register" className="nav-link" onClick={closeMobileMenu}>Register</NavLink></li>
+            </>
+          )}
+          {user && (
+            <li><NavLink to="/students/dashboard" className="nav-link" onClick={closeMobileMenu}>Dashboard</NavLink></li>
+          )}
+          <li><NavLink to="/admin" className="nav-link" onClick={closeMobileMenu}>Admin</NavLink></li>
         </ul>
 
-        {/* Hamburger Icon */}
         <div className={`hamburger ${isMobileMenuOpen ? 'open' : ''}`} onClick={toggleMobileMenu}>
           <span></span>
           <span></span>
@@ -106,7 +89,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Overlay */}
       <div className={`mobile-overlay ${isMobileMenuOpen ? 'show' : ''}`}>
         <ul>
           <li><NavLink to="/" className="nav-link" onClick={closeMobileMenu}>Home</NavLink></li>
@@ -115,7 +97,15 @@ const Navbar = () => {
               <span className="nav-link" onClick={() => scrollToSection(sec.id)}>{sec.label}</span>
             </li>
           ))}
-          <li><NavLink to="/enroll-now" className="nav-link" onClick={closeMobileMenu}>Enroll-now</NavLink></li>
+          {!user && (
+            <>
+              <li><NavLink to="/student-login" className="nav-link" onClick={closeMobileMenu}>Student Login</NavLink></li>
+              <li><NavLink to="/student-register" className="nav-link" onClick={closeMobileMenu}>Register</NavLink></li>
+            </>
+          )}
+          {user && (
+            <li><NavLink to="/students/dashboard" className="nav-link" onClick={closeMobileMenu}>Dashboard</NavLink></li>
+          )}
           <li><NavLink to="/admin" className="nav-link" onClick={closeMobileMenu}>Admin</NavLink></li>
         </ul>
       </div>

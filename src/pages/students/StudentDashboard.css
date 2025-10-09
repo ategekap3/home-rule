@@ -1,0 +1,73 @@
+/* Ensure content is below navbar */
+.student-dashboard-container {
+  padding: 100px 20px 20px 20px; /* extra top padding for navbar */
+  font-family: Arial, sans-serif;
+  min-height: 100vh;
+  background-color: #f7f8fa;
+}
+
+/* Header */
+.student-dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.student-dashboard-header h2 {
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Tables for progress, orders, admissions */
+.student-dashboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 40px;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.student-dashboard-table th,
+.student-dashboard-table td {
+  padding: 12px 15px;
+  border: 1px solid #e0e0e0;
+  text-align: left;
+}
+
+.student-dashboard-table th {
+  background-color: #4f46e5; /* Indigo header */
+  color: #fff;
+  font-weight: 600;
+}
+
+.student-dashboard-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* Status styling for orders */
+.status-pending {
+  color: #f59e0b;
+  font-weight: bold;
+}
+
+.status-processing {
+  color: #3b82f6;
+  font-weight: bold;
+}
+
+.status-completed {
+  color: #10b981;
+  font-weight: bold;
+}
+
+.status-cancelled {
+  color: #ef4444;
+  font-weight: bold;
+}
+
+/* Footer spacing */
+.student-dashboard-footer {
+  margin-top: 50px;
+}

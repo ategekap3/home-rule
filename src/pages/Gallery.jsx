@@ -9,7 +9,7 @@ const imageData = [
     id: 1,
     image: img1,
     name: 'GRAPHICS DESIGN',
-    description: 'We offer current graphics design tools with Adobe master collection, CoreDraw and wondershare filmora.',
+    description: 'We offer current graphics design tools with Adobe master collection, CoreDraw and wondershare filmora. Graphics being one of the most world wanted iconic stuff we mak sure the students get the best in it from our school',
 
   },
   {
@@ -22,7 +22,7 @@ const imageData = [
     id: 3,
     image: img3,
     name: 'Programming ',
-    description: 'Waves crashing on the shore under a sunset sky.',
+    description: 'Unkock your coding potential, learn to code, break the mode from zero to hero. Code your dreams into reality.',
   },
 ];
 

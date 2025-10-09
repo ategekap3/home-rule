@@ -22,6 +22,9 @@ const Footer = () => {
           <a href="https://linkedin.com/in/yourhandle" target="_blank" rel="noopener noreferrer">
             LinkedIn
           </a>
+            <a href="https://linkedin.com/in/yourhandle" target="_blank" rel="noopener noreferrer">
+            YouTube
+          </a>
           <a href="https://twitter.com/yourhandle" target="_blank" rel="noopener noreferrer">
             Twitter
           </a>

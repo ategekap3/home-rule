@@ -1,48 +1,90 @@
+/* src/components/Footer.css */
+
+/* Footer wrapper */
 .footer {
-  background-color: #222;
-  color: #fff;
-  padding: 2rem 1rem 1rem;
-  font-family: 'Segoe UI', sans-serif;
+  background-color: #1f2937; /* dark gray */
+  color: #f9fafb; /* off-white text */
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem 1rem 1rem;
+  box-sizing: border-box;
 }
 
+/* Main container inside footer */
 .footer-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1.5rem;
+  width: 100%;
+  max-width: 1200px;
+  text-align: center;
 }
 
+/* Footer logo styling */
 .footer-logo {
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   font-weight: bold;
-  color: #00bfa6;
 }
 
-.footer-nav,
-.footer-socials {
+/* Navigation links */
+.footer-nav {
   display: flex;
-  gap: 1.5rem;
   flex-wrap: wrap;
   justify-content: center;
+  gap: 1.5rem;
 }
 
-.footer-nav a,
-.footer-socials a {
-  color: #ccc;
+.footer-nav a {
+  color: #f9fafb;
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
-.footer-nav a:hover,
-.footer-socials a:hover {
-  color: #00bfa6;
+.footer-nav a:hover {
+  color: #3b82f6; /* blue hover */
 }
 
+/* Social links */
+.footer-socials {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.footer-socials a {
+  color: #f9fafb;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.footer-socials a:hover {
+  color: #3b82f6; /* blue hover */
+}
+
+/* Footer bottom text */
 .footer-bottom {
+  margin-top: 1.5rem;
+  font-size: 0.875rem;
   text-align: center;
-  margin-top: 2rem;
-  font-size: 0.9rem;
-  color: #aaa;
-  border-top: 1px solid #444;
-  padding-top: 1rem;
+  border-top: 1px solid #374151;
+  padding-top: 0.75rem;
+  width: 100%;
+}
+
+/* Make footer sticky at bottom if content is small */
+body, html, #root {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+body > #root > .app-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }

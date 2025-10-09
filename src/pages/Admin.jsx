@@ -1,260 +1,226 @@
-import React, { useState, useEffect } from 'react';
-import './Admin.css';
-import { collection, onSnapshot, doc, deleteDoc, updateDoc, query, orderBy } from 'firebase/firestore';
-import { db, auth } from '../components/firebase';
-import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+// src/pages/Admin.jsx
+import React, { useState, useEffect, useRef } from "react";
+import { collection, getDocs, query, orderBy, onSnapshot, updateDoc, doc, deleteDoc, addDoc } from "firebase/firestore";
+import { db, auth } from "../components/firebase";
+import "./Admin.css";
 
-const statuses = ['pending', 'processing', 'completed', 'cancelled'];
-
-const Admin = () => {
-  const [user, setUser] = useState(null);
-  const [admissions, setAdmissions] = useState([]);
+export default function Admin() {
+  const [activeTab, setActiveTab] = useState("orders");
   const [orders, setOrders] = useState([]);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [authError, setAuthError] = useState('');
-  const [activeTab, setActiveTab] = useState('admissions');
-  const [searchAdmission, setSearchAdmission] = useState('');
-  const [searchOrder, setSearchOrder] = useState('');
-  const [orderStatusFilter, setOrderStatusFilter] = useState('all');
+  const [students, setStudents] = useState([]);
+  const [admissions, setAdmissions] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [messages, setMessages] = useState({});
+  const [inputValues, setInputValues] = useState({});
+  const chatRefs = useRef({});
 
-  // Auth listener
+  // Fetch Orders
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      setUser(firebaseUser);
+    const q = query(collection(db, "laptopOrders"), orderBy("createdAt", "desc"));
+    const unsubscribe = onSnapshot(q, (snap) => {
+      setOrders(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
     });
     return () => unsubscribe();
   }, []);
 
-  // Admissions listener
+  // Fetch Students
   useEffect(() => {
-    if (!user) return;
-    const q = query(collection(db, 'admissions'), orderBy('submittedAt', 'desc'));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const data = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-        submittedAt: doc.data().submittedAt?.toDate() || new Date()
-      }));
-      setAdmissions(data);
+    const q = query(collection(db, "students"), orderBy("createdAt", "desc"));
+    const unsubscribe = onSnapshot(q, (snap) => {
+      setStudents(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
     });
     return () => unsubscribe();
-  }, [user]);
+  }, []);
 
-  // Orders listener
+  // Fetch Admissions
   useEffect(() => {
-    if (!user) return;
-    const q = query(collection(db, 'orders'), orderBy('createdAt', 'desc'));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const data = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data(),
-        createdAt: doc.data().createdAt?.toDate() || new Date(),
-        status: doc.data().status || 'pending'
-      }));
-      setOrders(data);
+    const q = query(collection(db, "admissions"), orderBy("submittedAt", "desc"));
+    const unsubscribe = onSnapshot(q, (snap) => {
+      setAdmissions(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
     });
     return () => unsubscribe();
-  }, [user]);
+  }, []);
 
-  // Admin login/logout
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      setAuthError('');
-      toast.success('Login successful!');
-    } catch {
-      setAuthError('Invalid email or password');
-      toast.error('Login failed');
-    }
+  // Fetch messages
+  useEffect(() => {
+    const q = query(collection(db, "messages"), orderBy("timestamp", "asc"));
+    const unsubscribe = onSnapshot(q, (snap) => {
+      const allMsgs = {};
+      snap.docs.forEach(docSnap => {
+        const data = docSnap.data();
+        const studentId = data.senderId === "admin" ? data.receiverId : data.senderId;
+        if (!allMsgs[studentId]) allMsgs[studentId] = [];
+        allMsgs[studentId].push(data);
+      });
+      setMessages(allMsgs);
+      // scroll to bottom for each chat
+      Object.keys(chatRefs.current).forEach(id => {
+        chatRefs.current[id]?.scrollTo(0, chatRefs.current[id].scrollHeight);
+      });
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // Send message
+  const handleSendMessage = async (studentId) => {
+    const text = inputValues[studentId];
+    if (!text?.trim()) return;
+    await addDoc(collection(db, "messages"), {
+      senderId: "admin",
+      receiverId: studentId,
+      text,
+      timestamp: new Date(),
+      read: false,
+    });
+    setInputValues(prev => ({ ...prev, [studentId]: "" }));
   };
 
-  const handleLogout = async () => {
-    await signOut(auth);
-    setUser(null);
-    toast.info('Logged out');
-  };
-
-  // Delete helpers
-  const handleDeleteAdmission = async (id) => {
-    if (window.confirm('Delete this admission?')) {
-      await deleteDoc(doc(db, 'admissions', id));
-      toast.success('Deleted successfully!');
-    }
-  };
-
-  const handleDeleteOrder = async (id) => {
-    if (window.confirm('Delete this order?')) {
-      await deleteDoc(doc(db, 'orders', id));
-      toast.success('Deleted successfully!');
+  // Delete an order
+  const handleDeleteOrder = async (orderId) => {
+    if (window.confirm("Are you sure you want to delete this order?")) {
+      await deleteDoc(doc(db, "laptopOrders", orderId));
     }
   };
 
   // Update order status
-  const handleStatusChange = async (id, newStatus) => {
-    await updateDoc(doc(db, 'orders', id), { status: newStatus });
-    toast.info(`Status updated to ${newStatus}`);
+  const handleUpdateStatus = async (orderId, newStatus) => {
+    await updateDoc(doc(db, "laptopOrders", orderId), { status: newStatus });
   };
 
-  // Filtered lists
-  const filteredAdmissions = admissions.filter(entry =>
-    `${entry.firstName} ${entry.secondName} ${entry.course}`.toLowerCase().includes(searchAdmission.toLowerCase())
+  const filteredStudents = students.filter(
+    s =>
+      s.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      s.lastName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      s.email.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-  const filteredOrders = orders.filter(order => {
-    const matchesSearch = `${order.customerName} ${order.laptop} ${order.email}`.toLowerCase().includes(searchOrder.toLowerCase());
-    const matchesStatus = orderStatusFilter === 'all' ? true : order.status === orderStatusFilter;
-    return matchesSearch && matchesStatus;
-  });
-
-  if (!user) {
-    return (
-      <div className="admin-login-container">
-        <h2>Admin Login</h2>
-        <form onSubmit={handleLogin} className="admin-login-form">
-          <input type="email" placeholder="Admin Email" value={email} onChange={e => setEmail(e.target.value)} required />
-          <input type="password" placeholder="Admin Password" value={password} onChange={e => setPassword(e.target.value)} required />
-          <button type="submit">Login</button>
-          {authError && <p className="error-msg">{authError}</p>}
-        </form>
-        <ToastContainer />
-      </div>
-    );
-  }
 
   return (
     <div className="admin-container">
+      {/* Header */}
       <div className="admin-header">
         <h2>Admin Dashboard</h2>
-        <button onClick={handleLogout} className="logout-btn">Logout</button>
+        <button className="logout-btn" onClick={() => auth.signOut()}>Logout</button>
       </div>
 
       {/* Tabs */}
       <div className="tabs">
-        <button className={activeTab === 'admissions' ? 'active' : ''} onClick={() => setActiveTab('admissions')}>Admissions</button>
-        <button className={activeTab === 'orders' ? 'active' : ''} onClick={() => setActiveTab('orders')}>Laptop Orders</button>
+        <button className={activeTab === "orders" ? "active" : ""} onClick={() => setActiveTab("orders")}>Orders</button>
+        <button className={activeTab === "students" ? "active" : ""} onClick={() => setActiveTab("students")}>Students</button>
+        <button className={activeTab === "admissions" ? "active" : ""} onClick={() => setActiveTab("admissions")}>Admissions</button>
       </div>
 
-      {/* Admissions Table */}
-      <div className={`tab-content ${activeTab === 'admissions' ? 'fade-in' : 'fade-out'}`}>
-        {activeTab === 'admissions' && (
+      <div className="table-wrapper">
+        {/* Orders */}
+        {activeTab === "orders" && (
+          <table>
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Laptop</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {orders.map(o => (
+                <tr key={o.id}>
+                  <td>{o.customerName}</td>
+                  <td>{o.email}</td>
+                  <td>{o.phone}</td>
+                  <td>{o.laptop?.name || "-"}</td>
+                  <td>{o.laptop?.price || "-"}</td>
+                  <td>
+                    <select
+                      value={o.status || "Pending"}
+                      onChange={(e) => handleUpdateStatus(o.id, e.target.value)}
+                    >
+                      <option value="Pending">Pending</option>
+                      <option value="Processing">Processing</option>
+                      <option value="Completed">Completed</option>
+                      <option value="Cancelled">Cancelled</option>
+                    </select>
+                  </td>
+                  <td>
+                    <button onClick={() => handleDeleteOrder(o.id)}>Delete</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+
+        {/* Students */}
+        {activeTab === "students" && (
           <>
             <input
               type="text"
-              placeholder="Search by name or course"
-              value={searchAdmission}
-              onChange={e => setSearchAdmission(e.target.value)}
-              className="admin-search-input"
+              placeholder="Search by name or email"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="search-input"
             />
-            <div className="table-wrapper">
-              <table className="admissions-table">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Course</th>
-                    <th>Phone</th>
-                    <th>Nationality</th>
-                    <th>Submitted At</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredAdmissions.map((entry, idx) => (
-                    <tr key={entry.id}>
-                      <td>{idx + 1}</td>
-                      <td>{entry.firstName} {entry.secondName}</td>
-                      <td>{entry.course}</td>
-                      <td>{entry.phone}</td>
-                      <td>{entry.nationality}</td>
-                      <td>{entry.submittedAt.toLocaleString()}</td>
-                      <td>
-                        <button className="delete" onClick={() => handleDeleteAdmission(entry.id)}>Delete</button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            {filteredStudents.map(s => (
+              <div key={s.id} className="dashboard-card">
+                <p><strong>Name:</strong> {s.firstName} {s.lastName}</p>
+                <p><strong>Email:</strong> {s.email}</p>
+                <p><strong>Course:</strong> {s.course}</p>
+                <p><strong>Progress:</strong> {s.progress.join(", ") || "Not started"}</p>
+
+                {/* Chat */}
+                <div className="chat-section">
+                  <div className="chat-box" ref={el => chatRefs.current[s.id] = el}>
+                    {(messages[s.id] || []).map((m, idx) => (
+                      <div key={idx} className={`message ${m.senderId === "admin" ? "from-admin" : "from-student"}`}>
+                        {m.text}
+                      </div>
+                    ))}
+                  </div>
+                  <div className="chat-form">
+                    <input
+                      placeholder="Type message..."
+                      value={inputValues[s.id] || ""}
+                      onChange={(e) => setInputValues(prev => ({ ...prev, [s.id]: e.target.value }))}
+                      onKeyDown={(e) => { if(e.key==="Enter"){ handleSendMessage(s.id); e.preventDefault(); } }}
+                    />
+                    <button onClick={() => handleSendMessage(s.id)}>Send</button>
+                  </div>
+                </div>
+              </div>
+            ))}
           </>
         )}
-      </div>
 
-      {/* Orders Table */}
-      <div className={`tab-content ${activeTab === 'orders' ? 'fade-in' : 'fade-out'}`}>
-        {activeTab === 'orders' && (
-          <>
-            <div className="filters">
-              <input
-                type="text"
-                placeholder="Search by customer or laptop"
-                value={searchOrder}
-                onChange={e => setSearchOrder(e.target.value)}
-                className="admin-search-input"
-              />
-              <select value={orderStatusFilter} onChange={e => setOrderStatusFilter(e.target.value)}>
-                <option value="all">All Status</option>
-                {statuses.map(status => (
-                  <option key={status} value={status}>{status.charAt(0).toUpperCase() + status.slice(1)}</option>
-                ))}
-              </select>
-            </div>
-            <div className="table-wrapper">
-              <table className="admissions-table">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Customer Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Address</th>
-                    <th>Laptop</th>
-                    <th>Price</th>
-                    <th>Status</th>
-                    <th>Ordered At</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredOrders.map((order, idx) => (
-                    <tr key={order.id} className={`row-${order.status}`}>
-                      <td>{idx + 1}</td>
-                      <td>{order.customerName}</td>
-                      <td>{order.email}</td>
-                      <td>{order.phone}</td>
-                      <td>{order.address}</td>
-                      <td>{order.laptop}</td>
-                      <td>${order.price}</td>
-                      <td>
-                        <select
-                          className={`status-${order.status}`}
-                          value={order.status}
-                          onChange={(e) => handleStatusChange(order.id, e.target.value)}
-                        >
-                          {statuses.map(status => (
-                            <option key={status} value={status}>{status.charAt(0).toUpperCase() + status.slice(1)}</option>
-                          ))}
-                        </select>
-                      </td>
-                      <td>{order.createdAt.toLocaleString()}</td>
-                      <td>
-                        <button className="delete" onClick={() => handleDeleteOrder(order.id)}>Delete</button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </>
+        {/* Admissions */}
+        {activeTab === "admissions" && (
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Course</th>
+                <th>Status</th>
+                <th>Comments</th>
+                <th>Submitted On</th>
+              </tr>
+            </thead>
+            <tbody>
+              {admissions.map(a => (
+                <tr key={a.id}>
+                  <td>{a.firstName} {a.lastName}</td>
+                  <td>{a.email}</td>
+                  <td>{a.course}</td>
+                  <td>{a.status || "Pending"}</td>
+                  <td>{a.comments?.join(", ") || "-"}</td>
+                  <td>{a.submissionDate ? new Date(a.submissionDate).toLocaleString() : "-"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         )}
       </div>
-
-      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
-};
-
-export default Admin;
+}
