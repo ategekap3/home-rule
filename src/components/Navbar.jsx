@@ -61,8 +61,9 @@ const Navbar = ({ user }) => {
           </div>
         </div>
 
+        {/* Desktop Menu */}
         <ul className={`nav-links ${isMobileMenuOpen ? 'open' : ''}`}>
-          <li><NavLink to="/" className="nav-link" onClick={closeMobileMenu}>Home</NavLink></li>
+          <li><NavLink to="/home" className="nav-link" onClick={closeMobileMenu}>Home</NavLink></li>
           {sections.map(sec => (
             <li key={sec.id}>
               <span
@@ -73,7 +74,6 @@ const Navbar = ({ user }) => {
               </span>
             </li>
           ))}
-          {/* Laptop Shop Route */}
           <li>
             <NavLink to="/shop" className="nav-link" onClick={closeMobileMenu}>
               Laptop Shop
@@ -91,14 +91,23 @@ const Navbar = ({ user }) => {
           <li><NavLink to="/admin" className="nav-link" onClick={closeMobileMenu}>Admin</NavLink></li>
         </ul>
 
+        {/* Hamburger Icon */}
         <div className={`hamburger ${isMobileMenuOpen ? 'open' : ''}`} onClick={toggleMobileMenu}>
-          <span></span>
-          <span></span>
-          <span></span>
+          {isMobileMenuOpen ? (
+            <span className="close-icon">&times;</span>
+          ) : (
+            <>
+              <span></span>
+              <span></span>
+              <span></span>
+            </>
+          )}
         </div>
       </div>
 
-      <div className={`mobile-overlay ${isMobileMenuOpen ? 'show' : ''}`}>
+      {/* Mobile Menu Slide-in */}
+      <div className={`mobile-overlay ${isMobileMenuOpen ? 'show' : ''}`} onClick={closeMobileMenu}></div>
+      <div className={`mobile-menu ${isMobileMenuOpen ? 'open' : ''}`}>
         <ul>
           <li><NavLink to="/" className="nav-link" onClick={closeMobileMenu}>Home</NavLink></li>
           {sections.map(sec => (

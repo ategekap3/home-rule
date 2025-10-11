@@ -9,6 +9,7 @@ import ServicesSection from "../components/ServicesSection";
 import Gallery from "./Gallery";
 import LaptopShop from "../components/ShopSection";
 import WhatsAppButton from "../components/WhatsAppButton";
+import ShopSection from "../components/ShopSection"
 
 import repair1 from '../assets/repair1.jpeg';
 import repair2 from '../assets/repair2.jpeg';
@@ -70,7 +71,7 @@ const Home = () => {
       {/* Laptop Shop Section */}
       <section id="shop" className="shop-section" data-aos="fade-up" style={{ backgroundColor: "#eef2ff" }}>
         <h2>Shop Laptops</h2>
-        <LaptopShop />
+        <ShopSection />
       </section>
 
       {/* Services Section */}

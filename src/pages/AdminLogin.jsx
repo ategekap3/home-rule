@@ -9,6 +9,7 @@ const AdminLogin = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // New state
   const [error, setError] = useState("");
 
   const handleLogin = async (e) => {
@@ -37,13 +38,30 @@ const AdminLogin = () => {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <div className="password-wrapper" style={{ position: "relative" }}>
+            <input
+              type={showPassword ? "text" : "password"} // Toggle type
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <span
+              onClick={() => setShowPassword(!showPassword)}
+              style={{
+                position: "absolute",
+                right: "10px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                cursor: "pointer",
+                userSelect: "none",
+                color: "#007bff",
+                fontWeight: "bold"
+              }}
+            >
+              {showPassword ? "Hide" : "Show"}
+            </span>
+          </div>
           <button type="submit">Login</button>
         </form>
       </div>

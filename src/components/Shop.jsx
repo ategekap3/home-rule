@@ -1,6 +1,6 @@
 // src/pages/Shop.jsx
 import React from "react";
-import LaptopShop from "../components/ShopSection";
+import LaptopShop from "./ShopSection";
 
 const Shop = () => {
   return (

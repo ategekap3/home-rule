@@ -220,3 +220,44 @@ button.delete-btn:hover {
     padding: 10px;
   }
 }
+/* Admin header */
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;       /* Increased padding */
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 10px;
+  margin-bottom: 40px;       /* Space below header */
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 40px);
+  z-index: 999;
+  min-height: 80px;           /* Ensures header is taller */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* Logout button */
+.logout-btn {
+  padding: 12px 25px;          /* Slightly bigger for visibility */
+  background-color: #28a745; 
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+.logout-btn:hover {
+  background-color: #1e7e34;
+}
+
+/* Push content below fixed header */
+.admin-container {
+  padding-top: 120px;  /* Adjust to match header height + margin */
+}
