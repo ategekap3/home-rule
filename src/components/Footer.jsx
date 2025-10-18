@@ -10,19 +10,21 @@ const Footer = () => {
 
         <nav className="footer-nav">
           <a href="#">Home</a>
-          <a href="#about">About</a>
+          <a href="#course">Courses</a>
           <a href="#gallery">Gallery</a>
           <a href="#contact">Contact</a>
+           <a href="#contact">Student Login</a>
+            <a href="#contact">Laptop Shop</a>
         </nav>
 
         <div className="footer-socials">
-          <a href="https://github.com/yourhandle" target="_blank" rel="noopener noreferrer">
+          <a href="https://github.com/dashboard" target="_blank" rel="noopener noreferrer">
             GitHub
           </a>
           <a href="https://linkedin.com/in/yourhandle" target="_blank" rel="noopener noreferrer">
             LinkedIn
           </a>
-            <a href="https://linkedin.com/in/yourhandle" target="_blank" rel="noopener noreferrer">
+            <a href="www.youtube.com/@moderncomputerworldug1946" target="_blank" rel="www.youtube.com/@moderncomputerworldug1946">
             YouTube
           </a>
           <a href="https://twitter.com/yourhandle" target="_blank" rel="noopener noreferrer">
