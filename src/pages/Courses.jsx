@@ -10,10 +10,10 @@ import img3 from '../assets/img3.jpg';
 import img4 from '../assets/img4.jpeg';
 
 const courses = [
-  { name: 'Fundamentals of IT', fees: 'UGX. 450K', image: img1 },
-  { name: 'Graphics Design', fees: 'UGX. 800K', image: img2 },
-  { name: 'PROGRAMMING', fees: 'UGX. 1000K', image: img3 },
-  { name: 'MS.OFFICE', fees: 'UGX. 500K', image: img4 },
+  { name: 'FUNDAMENTALS OF IT', fees: 'UGX. 450,000', image: img1 },
+  { name: 'GRAPHICS DESIGN', fees: 'UGX. 800,000', image: img2 },
+  { name: 'PROGRAMMING', fees: 'UGX. 1000,000', image: img3 },
+  { name: 'MS.OFFICE', fees: 'UGX. 500,000', image: img4 },
 ];
 
 const Courses = () => {
