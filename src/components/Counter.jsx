@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { FaGraduationCap, FaHandshake, FaLaptopCode } from "react-icons/fa";
-import './Counter.css';
+import './counter.css';
 
 const statsData = [
   { label: "Students", target: 50, icon: <FaGraduationCap /> },
