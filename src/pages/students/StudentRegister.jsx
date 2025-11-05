@@ -1,7 +1,7 @@
 // src/pages/students/StudentRegister.jsx
 import React, { useState, useEffect } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { setDoc, doc } from "firebase/firestore";
+import { setDoc, doc, serverTimestamp, addDoc, collection } from "firebase/firestore";
 import { auth, db } from "../../components/firebase";
 import { useNavigate, Link } from "react-router-dom";
 import "./StudentPortal.css";
@@ -42,7 +42,7 @@ const StudentRegister = ({ selectedCourse = "" }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); 
+    setError("");
     setSuccess("");
 
     const { firstName, lastName, dob, course, nationality, email, password, confirmPassword } = formData;
@@ -51,17 +51,19 @@ const StudentRegister = ({ selectedCourse = "" }) => {
       setError("All fields are required.");
       return;
     }
-    if (password !== confirmPassword) { 
-      setError("Passwords do not match."); 
-      return; 
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
     }
 
     setLoading(true);
 
     try {
+      // 1️⃣ Create user in Firebase Auth
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
+      // 2️⃣ Save student data in Firestore
       await setDoc(doc(db, "students", user.uid), {
         uid: user.uid,
         firstName,
@@ -70,12 +72,22 @@ const StudentRegister = ({ selectedCourse = "" }) => {
         course,
         nationality,
         email,
-        progress: [],
+        progress: [course],      // add selected course to progress
+        certificates: [],         // for TopStats
         comments: [],
-        createdAt: new Date(),
+        createdAt: serverTimestamp(),
       });
 
-      setSuccess("Registration successful!");
+      // 3️⃣ Send welcome message
+      await addDoc(collection(db, "messages"), {
+        senderId: "admin",
+        receiverId: user.uid,
+        text: `Welcome ${firstName} to Modern Computer World UG!`,
+        timestamp: serverTimestamp(),
+        read: false,
+      });
+
+      setSuccess("Registration successful! Redirecting to your dashboard...");
       setFormData({
         firstName: "",
         lastName: "",
@@ -87,14 +99,17 @@ const StudentRegister = ({ selectedCourse = "" }) => {
         confirmPassword: ""
       });
 
+      // 4️⃣ Navigate to student dashboard after short delay
       setTimeout(() => navigate("/student-dashboard"), 2000);
+
     } catch (err) {
+      console.error(err);
       if (err.code === "auth/email-already-in-use") setError("This email is already registered.");
       else if (err.code === "auth/invalid-email") setError("Invalid email address.");
       else if (err.code === "auth/weak-password") setError("Password should be at least 6 characters.");
       else setError("Registration failed. Please try again.");
-    } finally { 
-      setLoading(false); 
+    } finally {
+      setLoading(false);
     }
   };
 

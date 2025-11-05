@@ -1,33 +1,80 @@
-import React, { useState } from 'react';
-import './header.css';
+import React, { useEffect, useState, useRef } from "react";
+import { motion } from "framer-motion";
+import { FaGraduationCap, FaHandshake, FaLaptopCode } from "react-icons/fa";
+import './Counter.css';
 
-const Header = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
+const statsData = [
+  { label: "Students", target: 50, icon: <FaGraduationCap /> },
+  { label: "Clients", target: 47, icon: <FaHandshake /> },
+  { label: "Websites Developed", target: 11, icon: <FaLaptopCode /> },
+];
 
-  const toggleMenu = () => setMenuOpen(!menuOpen);
+function StatsCounter() {
+  const [counts, setCounts] = useState(statsData.map(() => 0));
+  const [hasAnimated, setHasAnimated] = useState(false);
+  const sectionRef = useRef(null);
+
+  // Intersection Observer for scroll-triggered animation
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !hasAnimated) {
+          setHasAnimated(true);
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => {
+      if (sectionRef.current) observer.unobserve(sectionRef.current);
+    };
+  }, [hasAnimated]);
+
+  // Counting logic
+  useEffect(() => {
+    if (!hasAnimated) return;
+
+    const intervals = statsData.map((stat, index) => {
+      const step = stat.target / 60;
+      return setInterval(() => {
+        setCounts((prev) => {
+          const newCounts = [...prev];
+          if (newCounts[index] < stat.target) {
+            newCounts[index] = Math.min(newCounts[index] + step, stat.target);
+          }
+          return newCounts;
+        });
+      }, 40);
+    });
+
+    return () => intervals.forEach(clearInterval);
+  }, [hasAnimated]);
 
   return (
-    <header className="header">
-      <div className="header-top">
-        <img src="/school-logo.jpeg" alt="School Logo" width="120" />
-        <h1>MODERN COMPUTER WORLD UG</h1>
+    <section className="stats-section" ref={sectionRef}>
+      <div className="stats-header">
+        <h2>Our Achievements</h2>
+        <p>Proud milestones we’ve reached at Modern Computer World Uganda</p>
       </div>
 
-      <div className="header-info">
-        <p><strong>Motto:</strong> "Digitalise yourself & future"</p>
-        <p><strong>Mission:</strong> Focused on training the world move and meet with the trending technology by enabling them use a computer</p>
-        <p><strong>Vision:</strong> To have a fully digital world.</p>
+      <div className="stats-grid">
+        {statsData.map((stat, index) => (
+          <motion.div
+            key={stat.label}
+            className="stats-card"
+            initial={{ opacity: 0, y: 50 }}
+            animate={hasAnimated ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: index * 0.3 }}
+          >
+            <div className="stats-icon">{stat.icon}</div>
+            <h3>{Math.round(counts[index])}+</h3>
+            <p>{stat.label}</p>
+          </motion.div>
+        ))}
       </div>
-
-     
-
-      <div className="menu-icon" onClick={toggleMenu}>
-        <div className={`bar1 ${menuOpen ? 'change' : ''}`}></div>
-        <div className={`bar2 ${menuOpen ? 'change' : ''}`}></div>
-        <div className={`bar3 ${menuOpen ? 'change' : ''}`}></div>
-      </div>
-    </header>
+    </section>
   );
-};
+}
 
-export default Header;
+export default StatsCounter;

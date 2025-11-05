@@ -1,0 +1,26 @@
+.notifications-container {
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 12px;
+  max-height: 400px;
+  overflow-y: auto;
+  background-color: #fdfdfd;
+}
+
+.notification-item {
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+.notification-date {
+  display: block;
+  font-size: 0.75rem;
+  color: #888;
+  margin-top: 2px;
+}

@@ -7,12 +7,13 @@ import "./StudentPortal.css";
 
 const StudentLogin = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const [showPassword, setShowPassword] = useState(false); // toggle password visibility
+  const handleChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -20,11 +21,13 @@ const StudentLogin = () => {
     setLoading(true);
 
     try {
+      const { email, password } = formData;
       await signInWithEmailAndPassword(auth, email, password);
-      // Only redirect AFTER successful login
+
+      // Redirect to Student Dashboard
       navigate("/student-dashboard");
     } catch (err) {
-      // Friendly error messages
+      console.error(err);
       if (err.code === "auth/user-not-found") setError("No account found with this email.");
       else if (err.code === "auth/wrong-password") setError("Incorrect password.");
       else if (err.code === "auth/invalid-email") setError("Invalid email address.");
@@ -36,22 +39,25 @@ const StudentLogin = () => {
 
   return (
     <div className="student-portal-container">
-      <h2>Student Login</h2>
       <form className="student-form" onSubmit={handleLogin}>
+        <h2>Student Login</h2>
+
         <input
           type="email"
+          name="email"
           placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={formData.email}
+          onChange={handleChange}
           required
         />
 
         <div style={{ position: "relative" }}>
           <input
             type={showPassword ? "text" : "password"}
+            name="password"
             placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={formData.password}
+            onChange={handleChange}
             required
           />
           <span
@@ -63,7 +69,7 @@ const StudentLogin = () => {
               transform: "translateY(-50%)",
               cursor: "pointer",
               color: "#007bff",
-              fontWeight: "bold"
+              fontWeight: "bold",
             }}
           >
             {showPassword ? "Hide" : "Show"}

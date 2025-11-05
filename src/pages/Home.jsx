@@ -23,6 +23,7 @@ import editing2 from '../assets/editing2.jpeg';
 import heroBg from '../assets/hero-gb.jpeg';
 
 import './Home.css';
+import Counter from "../components/Counter";
 
 const Home = () => {
   useEffect(() => {
@@ -90,6 +91,7 @@ const Home = () => {
         <h2>Gallery</h2>
         <Gallery />
       </section>
+      <Counter/>
 
       <WhatsAppButton />
     </div>

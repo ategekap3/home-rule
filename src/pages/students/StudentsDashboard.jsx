@@ -1,118 +1,219 @@
-// src/pages/students/StudentDashboard.jsx
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { auth, db } from "../../components/firebase";
-import { collection, query, where, onSnapshot, addDoc, orderBy, deleteDoc, doc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  updateDoc,
+  arrayUnion,
+  query,
+  orderBy,
+} from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
-import "./StudentPortal.css";
+
+import Sidebar from "./Sidebar";
+import TopStats from "./TopStats";
+import ProfileCard from "./ProfileCard";
+import NotificationsPanel from "./Notifications";
+import MessagePanel from "./MessagePanel";
+
+import img1 from "../../assets/img1.jpg";
+import img2 from "../../assets/img2.jpg";
+import img3 from "../../assets/img3.jpg";
+import img4 from "../../assets/img4.jpeg";
+
+import "./StudentDashboard.css";
+
+const coursesList = [
+  { id: "fundamentals-it", name: "FUNDAMENTALS OF IT", fees: "UGX. 450,000", image: img1 },
+  { id: "graphics-design", name: "GRAPHICS DESIGN", fees: "UGX. 800,000", image: img2 },
+  { id: "programming", name: "PROGRAMMING", fees: "UGX. 1,000,000", image: img3 },
+  { id: "ms-office", name: "MS.OFFICE", fees: "UGX. 500,000", image: img4 },
+];
 
 const StudentDashboard = () => {
   const navigate = useNavigate();
   const user = auth.currentUser;
+
+  const [activeTab, setActiveTab] = useState("Dashboard");
   const [student, setStudent] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [inputValue, setInputValue] = useState("");
-  const chatRef = useRef();
+  const [selectedCourse, setSelectedCourse] = useState(null);
 
-  // Fetch student data
   useEffect(() => {
-    if (!user) {
-      navigate("/student-login");
-      return;
-    }
+    if (!user) navigate("/student-login");
 
-    const docRef = doc(db, "students", user.uid);
-    const unsubscribe = onSnapshot(docRef, (snap) => {
+    const unsubscribe = onSnapshot(doc(db, "students", user.uid), (snap) => {
       if (snap.exists()) setStudent({ id: snap.id, ...snap.data() });
-      else setStudent(null);
     });
 
     return () => unsubscribe();
   }, [user, navigate]);
 
-  // Fetch messages between student and admin
   useEffect(() => {
     if (!user) return;
+
     const q = query(collection(db, "messages"), orderBy("timestamp", "asc"));
     const unsubscribe = onSnapshot(q, (snap) => {
       const msgs = snap.docs
-        .map(doc => doc.data())
-        .filter(m => m.senderId === user.uid || m.receiverId === user.uid);
+        .map((doc) => doc.data())
+        .filter((m) => m.senderId === "admin" && m.receiverId === user.uid);
       setMessages(msgs);
-
-      // scroll to bottom
-      setTimeout(() => {
-        chatRef.current?.scrollTo(0, chatRef.current.scrollHeight);
-      }, 100);
     });
 
     return () => unsubscribe();
   }, [user]);
-
-  const handleSendMessage = async () => {
-    if (!inputValue.trim()) return;
-    await addDoc(collection(db, "messages"), {
-      senderId: user.uid,
-      receiverId: "admin",
-      text: inputValue,
-      timestamp: new Date(),
-    });
-    setInputValue("");
-  };
-
-  const handleDeleteAccount = async () => {
-    if (window.confirm("Are you sure you want to delete your account? This cannot be undone.")) {
-      try {
-        await deleteDoc(doc(db, "students", user.uid));
-        await auth.currentUser.delete();
-        navigate("/student-login");
-      } catch (err) {
-        alert("Failed to delete account: " + err.message);
-      }
-    }
-  };
 
   const handleLogout = () => {
     auth.signOut();
     navigate("/student-login");
   };
 
+  const handleEnroll = async (courseId) => {
+    if (!student) return;
+    const studentRef = doc(db, "students", student.id);
+    try {
+      await updateDoc(studentRef, {
+        enrolledCourses: arrayUnion(courseId),
+      });
+      alert("Successfully enrolled!");
+    } catch (err) {
+      console.error(err);
+      alert("Enrollment failed!");
+    }
+  };
+
   if (!student) return <p>Loading student data...</p>;
 
   return (
-    <div className="student-portal-container">
-      <h2>Student Dashboard</h2>
-      <button className="logout-btn" onClick={handleLogout} style={{ marginBottom: "20px" }}>
-        Logout
-      </button>
+    <div className="dashboard-container">
+      <Sidebar active={activeTab} setActive={setActiveTab} handleLogout={handleLogout} />
 
-      <div className="student-info">
-        <p><strong>Name:</strong> {student.firstName} {student.lastName}</p>
-        <p><strong>Email:</strong> {student.email}</p>
-        <p><strong>Course:</strong> {student.course}</p>
-        <p><strong>Progress:</strong> {student.progress.join(", ") || "Not started"}</p>
-        <button className="btn-secondary" onClick={handleDeleteAccount}>Delete Account</button>
-      </div>
+      <main className="dashboard-main">
+        {activeTab === "Dashboard" && !selectedCourse && (
+          <>
+            <TopStats
+              coursesCount={student.enrolledCourses?.length || 0}
+              completedCount={student.progress?.length || 0}
+              certificatesCount={student.certificates?.length || 0}
+            />
 
-      <div className="messages-container">
-        <h3>Messages with Admin</h3>
-        <div className="chat-box" ref={chatRef}>
-          {messages.map((m, idx) => (
-            <div key={idx} className={`message ${m.senderId === user.uid ? "from-student" : "from-admin"}`}>
-              {m.text}
+            <div className="available-courses-section">
+              <h2>Courses</h2>
+              <div className="courses-grid">
+                {coursesList.map((course) => {
+                  const isEnrolled = student.enrolledCourses?.includes(course.id);
+                  const completed = student.progress?.includes(course.id);
+                  const progressPercentage = completed ? 100 : isEnrolled ? 50 : 0;
+
+                  return (
+                    <div
+                      key={course.id}
+                      className="course-card"
+                      onClick={() => setSelectedCourse(course)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <img src={course.image} alt={course.name} className="course-image" />
+                      <div className="course-info">
+                        <h3>{course.name}</h3>
+                        <p className="course-fees">{course.fees}</p>
+
+                        {isEnrolled && (
+                          <>
+                            <div className="progress-container">
+                              <div
+                                className="progress-bar"
+                                style={{ width: `${progressPercentage}%` }}
+                              ></div>
+                            </div>
+                            <p className="progress-text">{progressPercentage}% completed</p>
+                          </>
+                        )}
+
+                        {isEnrolled ? (
+                          <span className="enrolled-badge">Enrolled</span>
+                        ) : (
+                          <button
+                            className="btn-primary"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleEnroll(course.id);
+                            }}
+                          >
+                            Enroll
+                          </button>
+                        )}
+
+                        {completed && <span className="certificate-badge completed">Certificate available!</span>}
+                        {!completed && isEnrolled && (
+                          <span className="certificate-badge">
+                            Your certificate will appear after course completion
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-          ))}
-        </div>
-        <div className="chat-form">
-          <input
-            type="text"
-            placeholder="Type your message..."
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            onKeyDown={(e) => { if(e.key==="Enter"){ handleSendMessage(); } }}
-          />
-          <button onClick={handleSendMessage}>Send</button>
-        </div>
-      </div>
+          </>
+        )}
+
+        {selectedCourse && (
+          <div className="course-details">
+            <button
+              className="btn-primary"
+              onClick={() => setSelectedCourse(null)}
+              style={{ marginBottom: "1rem", backgroundColor: "#dc3545" }}
+            >
+              Back to Courses
+            </button>
+
+            <div className="course-details-card">
+              <img
+                src={selectedCourse.image}
+                alt={selectedCourse.name}
+                className="course-image-large"
+              />
+              <div className="course-info">
+                <h2>{selectedCourse.name}</h2>
+                <p className="course-fees">{selectedCourse.fees}</p>
+
+                {student.enrolledCourses?.includes(selectedCourse.id) ? (
+                  <>
+                    <div className="progress-container">
+                      <div
+                        className="progress-bar"
+                        style={{
+                          width: student.progress?.includes(selectedCourse.id) ? "100%" : "50%",
+                        }}
+                      ></div>
+                    </div>
+                    <p className="progress-text">
+                      {student.progress?.includes(selectedCourse.id) ? "100% completed" : "In progress"}
+                    </p>
+                  </>
+                ) : (
+                  <button
+                    className="btn-primary"
+                    onClick={() => handleEnroll(selectedCourse.id)}
+                  >
+                    Enroll in this course
+                  </button>
+                )}
+
+                {student.progress?.includes(selectedCourse.id) && (
+                  <span className="certificate-badge completed">Certificate available!</span>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === "Messages" && <MessagePanel messages={messages} user={user} />}
+        {activeTab === "Notifications" && <NotificationsPanel notifications={student.notifications} />}
+        {activeTab === "Profile" && <ProfileCard student={student} />}
+      </main>
     </div>
   );
 };
