@@ -3,7 +3,7 @@
 // Import Firebase modules
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { getAnalytics } from "firebase/analytics";
 
 // Your web app's Firebase configuration
@@ -29,5 +29,5 @@ const db = getFirestore(app);
 // Initialize Firebase Auth
 const auth = getAuth(app);
 
-// Export initialized services
-export { db, auth, analytics };
+// Export initialized services and Auth helpers for phone OTP
+export { db, auth, analytics, RecaptchaVerifier, signInWithPhoneNumber };

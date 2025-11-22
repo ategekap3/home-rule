@@ -10,6 +10,9 @@ const imageData = [
     image: img1,
     name: 'GRAPHICS DESIGN',
     description: 'We offer current graphics design tools with Adobe master collection, CoreDraw and wondershare filmora. Graphics being one of the most world wanted iconic stuff we mak sure the students get the best in it from our school',
+    
+    
+    
 
   },
   {

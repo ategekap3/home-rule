@@ -7,25 +7,23 @@ import { useNavigate, Link } from "react-router-dom";
 import "./StudentPortal.css";
 
 const availableCourses = [
-  "Web Development",
-  "Graphic Design",
-  "Video Editing",
-  "IT Support",
-  "Data Science",
+  "FUNDAMENTALS OF IT",
+  "GRAPHICS DESIGN",
+  "PROGRAMMING",
+  "MS.OFFICE",
 ];
 
 const StudentRegister = ({ selectedCourse = "" }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: "",
-    lastName: "",
-    dob: "",
+    secondName: "",
     course: selectedCourse,
-    nationality: "",
-    email: "",
+    whatsapp: "",
     password: "",
     confirmPassword: "",
   });
+
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
@@ -38,19 +36,26 @@ const StudentRegister = ({ selectedCourse = "" }) => {
     }
   }, [selectedCourse]);
 
-  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (e) =>
+    setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setSuccess("");
 
-    const { firstName, lastName, dob, course, nationality, email, password, confirmPassword } = formData;
+    const { firstName, secondName, course, whatsapp, password, confirmPassword } = formData;
 
-    if (!firstName || !lastName || !dob || !course || !nationality || !email || !password || !confirmPassword) {
+    if (!firstName || !secondName || !course || !whatsapp || !password || !confirmPassword) {
       setError("All fields are required.");
       return;
     }
+
+    if (!/^\d{10,15}$/.test(whatsapp)) {
+      setError("Enter a valid WhatsApp number (only digits).");
+      return;
+    }
+
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
       return;
@@ -59,26 +64,28 @@ const StudentRegister = ({ selectedCourse = "" }) => {
     setLoading(true);
 
     try {
-      // 1️⃣ Create user in Firebase Auth
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      // Convert WhatsApp number to email format for Firebase Auth
+      const generatedEmail = `${whatsapp}@mcschool.ug`;
+
+      // Create Firebase user
+      const userCredential = await createUserWithEmailAndPassword(auth, generatedEmail, password);
       const user = userCredential.user;
 
-      // 2️⃣ Save student data in Firestore
+      // Save student data in Firestore
       await setDoc(doc(db, "students", user.uid), {
         uid: user.uid,
         firstName,
-        lastName,
-        dob,
+        secondName,
         course,
-        nationality,
-        email,
-        progress: [course],      // add selected course to progress
-        certificates: [],         // for TopStats
+        whatsapp,
+        email: generatedEmail,
+        progress: [course],
+        certificates: [],
         comments: [],
         createdAt: serverTimestamp(),
       });
 
-      // 3️⃣ Send welcome message
+      // Send welcome message
       await addDoc(collection(db, "messages"), {
         senderId: "admin",
         receiverId: user.uid,
@@ -87,27 +94,22 @@ const StudentRegister = ({ selectedCourse = "" }) => {
         read: false,
       });
 
-      setSuccess("Registration successful! Redirecting to your dashboard...");
+      setSuccess("Registration successful! Redirecting...");
       setFormData({
         firstName: "",
-        lastName: "",
-        dob: "",
+        secondName: "",
         course: selectedCourse,
-        nationality: "",
-        email: "",
+        whatsapp: "",
         password: "",
-        confirmPassword: ""
+        confirmPassword: "",
       });
 
-      // 4️⃣ Navigate to student dashboard after short delay
       setTimeout(() => navigate("/student-dashboard"), 2000);
-
     } catch (err) {
       console.error(err);
-      if (err.code === "auth/email-already-in-use") setError("This email is already registered.");
-      else if (err.code === "auth/invalid-email") setError("Invalid email address.");
-      else if (err.code === "auth/weak-password") setError("Password should be at least 6 characters.");
-      else setError("Registration failed. Please try again.");
+      if (err.code === "auth/email-already-in-use")
+        setError("This WhatsApp number is already registered.");
+      else setError("Registration failed. Try again.");
     } finally {
       setLoading(false);
     }
@@ -118,22 +120,45 @@ const StudentRegister = ({ selectedCourse = "" }) => {
       <form className="student-form" onSubmit={handleSubmit}>
         <h2>Student Registration</h2>
 
-        <input type="text" name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange} />
-        <input type="text" name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} />
-        <input type="date" name="dob" value={formData.dob} onChange={handleChange} />
+        <input
+          type="text"
+          name="firstName"
+          placeholder="First Name"
+          value={formData.firstName}
+          onChange={handleChange}
+        />
 
-        {/* Course Dropdown */}
-        <select name="course" value={formData.course} onChange={handleChange}>
+        <input
+          type="text"
+          name="secondName"
+          placeholder="Second Name"
+          value={formData.secondName}
+          onChange={handleChange}
+        />
+
+        {/* Select Course */}
+        <select
+          name="course"
+          value={formData.course}
+          onChange={handleChange}
+        >
           <option value="">Select a course</option>
           {availableCourses.map((c) => (
-            <option key={c} value={c}>{c}</option>
+            <option key={c} value={c}>
+              {c}
+            </option>
           ))}
         </select>
 
-        <input type="text" name="nationality" placeholder="Nationality" value={formData.nationality} onChange={handleChange} />
-        <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} />
+        <input
+          type="text"
+          name="whatsapp"
+          placeholder="WhatsApp Number"
+          value={formData.whatsapp}
+          onChange={handleChange}
+        />
 
-        {/* Password Field with toggle */}
+        {/* Password */}
         <div style={{ position: "relative" }}>
           <input
             type={showPassword ? "text" : "password"}
@@ -150,6 +175,7 @@ const StudentRegister = ({ selectedCourse = "" }) => {
           </span>
         </div>
 
+        {/* Confirm Password */}
         <div style={{ position: "relative" }}>
           <input
             type={showConfirmPassword ? "text" : "password"}
@@ -169,17 +195,15 @@ const StudentRegister = ({ selectedCourse = "" }) => {
         {error && <div className="error">{error}</div>}
         {success && <div className="success-message">{success}</div>}
 
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <button type="submit" className="btn-primary" disabled={loading}>
-            {loading ? "Registering..." : "Register"}
-          </button>
-          <button type="button" onClick={() => window.history.back()} className="btn-secondary">
-            Cancel
-          </button>
-        </div>
+        <button type="submit" className="btn-primary" disabled={loading}>
+          {loading ? "Registering..." : "Register"}
+        </button>
 
         <p style={{ textAlign: "center", marginTop: "10px" }}>
-          Already have an account? <Link to="/student-login" style={{ color: "#007bff" }}>Login</Link>
+          Already have an account?{" "}
+          <Link to="/student-login" style={{ color: "#007bff" }}>
+            Login
+          </Link>
         </p>
       </form>
     </div>

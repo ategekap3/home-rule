@@ -63,7 +63,7 @@ const Navbar = ({ user }) => {
 
         {/* Desktop Menu */}
         <ul className={`nav-links ${isMobileMenuOpen ? 'open' : ''}`}>
-          <li><NavLink to="/home" className="nav-link" onClick={closeMobileMenu}>Home</NavLink></li>
+          <li><NavLink to="/" className="nav-link" onClick={closeMobileMenu}>Home</NavLink></li>
           {sections.map(sec => (
             <li key={sec.id}>
               <span
@@ -74,20 +74,19 @@ const Navbar = ({ user }) => {
               </span>
             </li>
           ))}
-          <li>
-            <NavLink to="/shop" className="nav-link" onClick={closeMobileMenu}>
-              Laptop Shop
-            </NavLink>
-          </li>
+          <li><NavLink to="/shop" className="nav-link" onClick={closeMobileMenu}>Laptop Shop</NavLink></li>
+
           {!user && (
             <>
               <li><NavLink to="/student-login" className="nav-link" onClick={closeMobileMenu}>Student Login</NavLink></li>
               <li><NavLink to="/student-register" className="nav-link" onClick={closeMobileMenu}>Register</NavLink></li>
             </>
           )}
+
           {user && (
             <li><NavLink to="/student-dashboard" className="nav-link" onClick={closeMobileMenu}>Dashboard</NavLink></li>
           )}
+
           <li><NavLink to="/admin" className="nav-link" onClick={closeMobileMenu}>Admin</NavLink></li>
         </ul>
 
@@ -116,15 +115,18 @@ const Navbar = ({ user }) => {
             </li>
           ))}
           <li><NavLink to="/shop" className="nav-link" onClick={closeMobileMenu}>Laptop Shop</NavLink></li>
+
           {!user && (
             <>
               <li><NavLink to="/student-login" className="nav-link" onClick={closeMobileMenu}>Student Login</NavLink></li>
               <li><NavLink to="/student-register" className="nav-link" onClick={closeMobileMenu}>Register</NavLink></li>
             </>
           )}
+
           {user && (
             <li><NavLink to="/student-dashboard" className="nav-link" onClick={closeMobileMenu}>Dashboard</NavLink></li>
           )}
+
           <li><NavLink to="/admin" className="nav-link" onClick={closeMobileMenu}>Admin</NavLink></li>
         </ul>
       </div>

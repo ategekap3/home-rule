@@ -1,26 +1,16 @@
+// src/pages/Admin.jsx
 import React, { useState, useEffect, useRef } from "react";
-import {
-  collection,
-  query,
-  orderBy,
-  onSnapshot,
-  addDoc,
-  updateDoc,
-  doc,
-  arrayUnion,
-  deleteDoc
-} from "firebase/firestore";
+import { collection, getDocs, query, orderBy, onSnapshot, addDoc, deleteDoc, doc } from "firebase/firestore";
 import { db, auth } from "../components/firebase";
 import "./Admin.css";
 
 export default function Admin() {
+  const [activeTab, setActiveTab] = useState("students");
   const [students, setStudents] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [messages, setMessages] = useState({});
+  const [inputValues, setInputValues] = useState({});
   const [selectedStudent, setSelectedStudent] = useState(null);
-  const [messages, setMessages] = useState([]);
-  const [inputValue, setInputValue] = useState("");
-  const [totalStudents, setTotalStudents] = useState(0);
-  const chatRef = useRef();
+  const chatRefs = useRef({});
 
   // Redirect if not logged in
   useEffect(() => {
@@ -30,90 +20,67 @@ export default function Admin() {
     return () => unsubscribe();
   }, []);
 
-  // Fetch students and count
+  // Fetch Students
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "students"), (snap) => {
-      const allStudents = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setStudents(allStudents);
-      setTotalStudents(allStudents.length);
+    const q = query(collection(db, "students"), orderBy("createdAt", "desc"));
+    const unsubscribe = onSnapshot(q, snap => {
+      setStudents(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
     });
     return () => unsubscribe();
   }, []);
 
-  // Fetch messages for selected student
+  // Fetch Messages
   useEffect(() => {
-    if (!selectedStudent) return;
-
     const q = query(collection(db, "messages"), orderBy("timestamp", "asc"));
     const unsubscribe = onSnapshot(q, snap => {
-      const msgs = snap.docs
-        .map(doc => doc.data())
-        .filter(
-          m =>
-            (m.senderId === "admin" && m.receiverId === selectedStudent.id) ||
-            (m.senderId === selectedStudent.id && m.receiverId === "admin")
-        );
-      setMessages(msgs);
+      const allMsgs = {};
+      snap.docs.forEach(docSnap => {
+        const data = docSnap.data();
+        const studentId = data.senderId === "admin" ? data.receiverId : data.senderId;
+        if (!allMsgs[studentId]) allMsgs[studentId] = [];
+        allMsgs[studentId].push(data);
+      });
+      setMessages(allMsgs);
 
-      setTimeout(() => chatRef.current?.scrollTo(0, chatRef.current.scrollHeight), 100);
+      // Scroll to bottom
+      Object.keys(chatRefs.current).forEach(id => {
+        chatRefs.current[id]?.scrollTo(0, chatRefs.current[id].scrollHeight);
+      });
     });
     return () => unsubscribe();
-  }, [selectedStudent]);
+  }, []);
 
-  // Send message to selected student
-  const handleSendMessage = async () => {
-    if (!inputValue.trim() || !selectedStudent) return;
-
-    try {
-      await addDoc(collection(db, "messages"), {
-        senderId: "admin",
-        receiverId: selectedStudent.id,
-        text: inputValue,
-        timestamp: new Date(),
-        read: false,
-      });
-
-      const studentRef = doc(db, "students", selectedStudent.id);
-      await updateDoc(studentRef, {
-        notifications: arrayUnion({
-          text: `Admin: ${inputValue}`,
-          timestamp: new Date(),
-        }),
-      });
-
-      setInputValue("");
-    } catch (err) {
-      console.error("Failed to send message:", err);
-      alert("Message not sent.");
-    }
+  const handleSendMessage = async studentId => {
+    const text = inputValues[studentId];
+    if (!text?.trim()) return;
+    await addDoc(collection(db, "messages"), {
+      senderId: "admin",
+      receiverId: studentId,
+      text,
+      timestamp: new Date(),
+      read: false,
+    });
+    setInputValues(prev => ({ ...prev, [studentId]: "" }));
   };
 
-  // Delete student
-  const handleDeleteStudent = async (studentId) => {
-    if (!window.confirm("Are you sure you want to delete this student? This cannot be undone.")) return;
-
+  const handleDeleteStudent = async studentId => {
+    if (!window.confirm("Are you sure you want to delete this student?")) return;
     try {
       await deleteDoc(doc(db, "students", studentId));
-      if (selectedStudent?.id === studentId) setSelectedStudent(null);
-      alert("Student deleted successfully.");
+      alert("Student deleted successfully");
+      setSelectedStudent(null);
     } catch (err) {
-      console.error("Failed to delete student:", err);
+      console.error(err);
       alert("Failed to delete student.");
     }
   };
-
-  const filteredStudents = students.filter(
-    s =>
-      s.firstName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      s.lastName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      s.email?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   return (
     <div className="admin-container">
       {/* Header */}
       <div className="admin-header">
         <h2>Admin Dashboard</h2>
+        <p>Total Students: {students.length}</p>
         <button
           className="logout-btn"
           onClick={() => auth.signOut().then(() => window.location.href = "/admin-login")}
@@ -122,70 +89,53 @@ export default function Admin() {
         </button>
       </div>
 
-      {/* Total Students */}
-      <div className="total-students">
-        <strong>Total Students:</strong> {totalStudents}
-      </div>
-
       {/* Students List */}
-      <div className="students-section">
-        <input
-          type="text"
-          placeholder="Search students..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="search-input"
-        />
-
+      <div className="students-wrapper">
         <div className="students-list">
-          {filteredStudents.map(s => (
+          {students.map(s => (
             <div
               key={s.id}
               className={`student-item ${selectedStudent?.id === s.id ? "selected" : ""}`}
               onClick={() => setSelectedStudent(s)}
             >
-              <p><strong>{s.firstName} {s.lastName}</strong></p>
-              <p>{s.email}</p>
-              <button
-                onClick={(e) => { e.stopPropagation(); handleDeleteStudent(s.id); }}
-                className="delete-btn"
-              >
-                Delete
-              </button>
+              <p><strong>{s.firstName} {s.secondName}</strong></p>
+              <p>{s.course}</p>
+              <p>{s.whatsapp}</p>
             </div>
           ))}
         </div>
-      </div>
 
-      {/* Chat panel */}
-      {selectedStudent && (
-        <div className="chat-panel">
-          <h4>Chat with {selectedStudent.firstName} {selectedStudent.lastName}</h4>
-          <div className="chat-box" ref={chatRef}>
-            {messages.length === 0 ? (
-              <p>No messages yet.</p>
-            ) : (
-              messages.map((m, idx) => (
-                <div
-                  key={idx}
-                  className={`message ${m.senderId === "admin" ? "from-admin" : "from-student"}`}
-                >
-                  {m.text}
-                </div>
-              ))
-            )}
+        {selectedStudent && (
+          <div className="student-chat-details">
+            <div className="student-info">
+              <h3>{selectedStudent.firstName} {selectedStudent.secondName}</h3>
+              <p><strong>Course:</strong> {selectedStudent.course}</p>
+              <p><strong>WhatsApp:</strong> {selectedStudent.whatsapp}</p>
+              <button className="btn-danger" onClick={() => handleDeleteStudent(selectedStudent.id)}>Delete Student</button>
+            </div>
+
+            {/* Chat */}
+            <div className="chat-section">
+              <div className="chat-box" ref={el => chatRefs.current[selectedStudent.id] = el}>
+                {(messages[selectedStudent.id] || []).map((m, idx) => (
+                  <div key={idx} className={`message ${m.senderId === "admin" ? "from-admin" : "from-student"}`}>
+                    {m.text}
+                  </div>
+                ))}
+              </div>
+              <div className="chat-form">
+                <input
+                  placeholder="Type message..."
+                  value={inputValues[selectedStudent.id] || ""}
+                  onChange={e => setInputValues(prev => ({ ...prev, [selectedStudent.id]: e.target.value }))}
+                  onKeyDown={e => { if (e.key === "Enter") { handleSendMessage(selectedStudent.id); e.preventDefault(); } }}
+                />
+                <button onClick={() => handleSendMessage(selectedStudent.id)}>Send</button>
+              </div>
+            </div>
           </div>
-          <div className="chat-form">
-            <input
-              placeholder="Type message..."
-              value={inputValue}
-              onChange={e => setInputValue(e.target.value)}
-              onKeyDown={e => { if (e.key === "Enter") { handleSendMessage(); e.preventDefault(); } }}
-            />
-            <button onClick={handleSendMessage}>Send</button>
-          </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
