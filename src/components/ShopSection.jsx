@@ -1,5 +1,6 @@
+// src/components/ShopSection.jsx
 import React, { useState } from "react";
-import { laptops } from "../components/LaptopData";
+import { laptops } from "./LaptopData"; // ensure this points to your data
 import CustomerOrderModal from "../pages/CustomerOrderModal";
 import './ShopSection.css';
 
@@ -21,8 +22,9 @@ export default function LaptopShop() {
 
   return (
     <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-      {laptops.map((laptop) => (
-        <div key={laptop.id} className="border rounded-2xl shadow-lg p-4 text-center">
+      {laptops.map((laptop, index) => (
+        // Use a combination of id + index to guarantee uniqueness
+        <div key={`${laptop.id}-${index}`} className="border rounded-2xl shadow-lg p-4 text-center">
           <img src={laptop.image} alt={laptop.name} className="mx-auto w-40 h-40 object-cover mb-4" />
           <h2 className="text-xl font-bold">{laptop.name}</h2>
           <p className="text-gray-600">{laptop.description}</p>

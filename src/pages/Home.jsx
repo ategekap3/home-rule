@@ -1,4 +1,3 @@
-// src/pages/Home.jsx
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import AOS from "aos";
@@ -7,9 +6,10 @@ import "aos/dist/aos.css";
 import Courses from "./Courses";
 import ServicesSection from "../components/ServicesSection";
 import Gallery from "./Gallery";
-import LaptopShop from "../components/ShopSection";
+import ShopSection from "../components/ShopSection";
 import WhatsAppButton from "../components/WhatsAppButton";
-import ShopSection from "../components/ShopSection"
+import BirthdayWidget from "../components/BirthdayWidget";
+import Counter from "../components/Counter";
 
 import repair1 from '../assets/repair1.jpeg';
 import repair2 from '../assets/repair2.jpeg';
@@ -23,7 +23,6 @@ import editing2 from '../assets/editing2.jpeg';
 import heroBg from '../assets/hero-gb.jpeg';
 
 import './Home.css';
-import Counter from "../components/Counter";
 
 const Home = () => {
   useEffect(() => {
@@ -32,9 +31,12 @@ const Home = () => {
 
   const scrollToShop = () => {
     const shopSection = document.getElementById('shop');
-    if (shopSection) {
-      shopSection.scrollIntoView({ behavior: 'smooth' });
-    }
+    if (shopSection) shopSection.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const scrollToBirthday = () => {
+    const birthdaySection = document.getElementById('birthday');
+    if (birthdaySection) birthdaySection.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
@@ -50,33 +52,37 @@ const Home = () => {
             <h1>Modern Computer World UG</h1>
             <p>Empowering you with the latest IT skills and affordable technology solutions.</p>
 
-            {/* Hero Buttons */}
             <div className="hero-buttons">
               <a href="#courses" className="btn-primary">Explore Courses</a>
               <Link to="/student-login" className="btn-secondary">Student Login</Link>
               <Link to="/student-register" className="btn-secondary">Register</Link>
-              <button className="btn-primary" onClick={scrollToShop}>
-                Buy Laptops
-              </button>
+              <button className="btn-primary" onClick={scrollToShop}>Buy Laptops</button>
+              <button className="btn-primary" onClick={scrollToBirthday}>Birthday Countdown</button>
+              <Link to="/savings-dashboard" className="btn-primary">Access Savings</Link>
             </div>
           </div>
         </div>
       </section>
 
+      {/* Birthday Section */}
+      <section id="birthday" data-aos="fade-up" style={{ backgroundColor: "#fff3e0", padding: "40px 0" }}>
+        <BirthdayWidget />
+      </section>
+
       {/* Courses Section */}
-      <section id="courses" className="courses-section" data-aos="fade-up" style={{ backgroundColor: "#f9fafb" }}>
+      <section id="courses" className="courses-section" data-aos="fade-up" style={{ backgroundColor: "#f9fafb", padding: "40px 0" }}>
         <h2>Our Courses</h2>
         <Courses />
       </section>
 
       {/* Laptop Shop Section */}
-      <section id="shop" className="shop-section" data-aos="fade-up" style={{ backgroundColor: "#eef2ff" }}>
+      <section id="shop" className="shop-section" data-aos="fade-up" style={{ backgroundColor: "#eef2ff", padding: "40px 0" }}>
         <h2>Shop Laptops</h2>
         <ShopSection />
       </section>
 
       {/* Services Section */}
-      <section id="services" className="services-section" data-aos="fade-up" style={{ backgroundColor: "#fff7ed" }}>
+      <section id="services" className="services-section" data-aos="fade-up" style={{ backgroundColor: "#fff7ed", padding: "40px 0" }}>
         <h2>Our Services</h2>
         <div className="services-grid">
           <ServicesSection id="computer-repair" title="Computer Repair" images={[repair1, repair2, repair3]} bgColor="#fff7ed" />
@@ -87,12 +93,15 @@ const Home = () => {
       </section>
 
       {/* Gallery Section */}
-      <section id="gallery" className="gallery-section" data-aos="fade-up" style={{ backgroundColor: "#f0f9ff" }}>
+      <section id="gallery" className="gallery-section" data-aos="fade-up" style={{ backgroundColor: "#f0f9ff", padding: "40px 0" }}>
         <h2>Gallery</h2>
         <Gallery />
       </section>
-      <Counter/>
 
+      {/* Counter Section */}
+      <Counter />
+
+      {/* WhatsApp Button */}
       <WhatsAppButton />
     </div>
   );

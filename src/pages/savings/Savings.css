@@ -1,0 +1,406 @@
+/* src/pages/savings/savings.css */
+
+/* General container for all savings pages */
+.savings-dashboard-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #1f2937;
+}
+
+/* Headings */
+.savings-dashboard-container h1,
+.savings-dashboard-container h2,
+.savings-dashboard-container h3 {
+  color: #111827;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* Paragraphs */
+.savings-dashboard-container p {
+  color: #374151;
+  margin-bottom: 15px;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* Navigation buttons */
+.savings-nav-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.btn-primary, .btn-secondary {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background-color: #2563eb;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background-color: #1d4ed8;
+}
+
+.btn-secondary {
+  background-color: #fbbf24;
+  color: #111827;
+}
+
+.btn-secondary:hover {
+  background-color: #f59e0b;
+}
+
+/* Forms */
+.savings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.savings-input {
+  padding: 12px 15px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  outline: none;
+}
+
+.savings-input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.2);
+}
+
+/* Error / Success Messages */
+.error {
+  color: #b91c1c;
+  font-weight: bold;
+}
+
+.success-message {
+  color: #15803d;
+  font-weight: bold;
+}
+
+/* Member Dashboard messages section */
+.messages-section {
+  margin-top: 30px;
+}
+
+.chat-box {
+  max-height: 250px;
+  overflow-y: auto;
+  padding: 15px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  background-color: #f3f4f6;
+}
+
+.message {
+  margin-bottom: 12px;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 15px;
+}
+
+.from-admin {
+  background-color: #e0f2fe;
+  color: #0369a1;
+}
+
+/* Buttons inside dashboard */
+.savings-dashboard-container button {
+  margin-top: 20px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .savings-dashboard-container {
+    padding: 20px;
+  }
+
+  .savings-nav-buttons {
+    flex-direction: column;
+  }
+
+  .btn-primary, .btn-secondary {
+    width: 100%;
+    text-align: center;
+  }
+}
+/* src/pages/savings/savings.css */
+
+/* Container for all savings pages */
+.savings-dashboard-container {
+  min-height: 100vh; /* Full viewport height */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 20px;
+  background-color: #f9fafb;
+  box-sizing: border-box;
+}
+
+/* Navigation buttons on the dashboard */
+.savings-nav-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.btn-primary, .btn-secondary {
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-primary {
+  background-color: #007bff;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+}
+
+.btn-secondary:hover {
+  background-color: #495057;
+}
+
+/* Forms */
+.savings-form {
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.savings-input {
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.error {
+  color: #ff4d4f;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.success-message {
+  color: #28a745;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+/* Footer stick to bottom */
+body, html {
+  height: 100%;
+  margin: 0;
+}
+
+.savings-footer {
+  margin-top: auto; /* pushes footer to bottom */
+  padding: 20px;
+  background-color: #343a40;
+  color: #fff;
+  text-align: center;
+}
+
+/* Savings account details and messaging */
+.savings-wrapper {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.savings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.savings-item {
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #fff;
+}
+
+.savings-item.selected {
+  border-color: #007bff;
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
+}
+
+.savings-details {
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.update-balance, .savings-message {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.update-balance input,
+.savings-message textarea {
+  flex: 1;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+.savings-message textarea {
+  resize: vertical;
+  height: 60px;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* src/pages/savings/savings.css */
+
+/* General container for all savings pages */
+.savings-container,
+.savings-dashboard-container {
+  min-height: 100vh; /* full viewport height */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 20px;
+  background-color: #f9fafb;
+  box-sizing: border-box;
+}
+
+/* Dashboard navigation buttons */
+.savings-nav-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.btn-primary, .btn-secondary {
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-primary {
+  background-color: #007bff;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+}
+
+.btn-secondary:hover {
+  background-color: #495057;
+}
+
+/* Forms and content wrapper */
+.savings-form {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+  width: 100%;
+  margin: 20px auto;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.savings-input {
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.error {
+  color: #ff4d4f;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.success-message {
+  color: #28a745;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+/* Footer stick to bottom */
+body, html {
+  height: 100%;
+  margin: 0;
+}
+
+.savings-footer {
+  margin-top: auto; /* pushes footer to bottom */
+  padding: 20px;
+  background-color: #343a40;
+  color: #fff;
+  text-align: center;
+}
+
+/* Headings and paragraphs */
+h1, h2, h3, p {
+  color: #111;
+  line-height: 1.6;
+}
+
+/* Terms & conditions specific styling */
+.savings-form p {
+  margin-bottom: 20px;
+  font-size: 16px;
+  color: #333;
+}
+

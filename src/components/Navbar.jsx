@@ -74,7 +74,7 @@ const Navbar = ({ user }) => {
               </span>
             </li>
           ))}
-          <li><NavLink to="/shop" className="nav-link" onClick={closeMobileMenu}>Laptop Shop</NavLink></li>
+          <li><NavLink to="/laptop-shop" className="nav-link" onClick={closeMobileMenu}>Laptop Shop</NavLink></li>
 
           {!user && (
             <>
@@ -86,6 +86,9 @@ const Navbar = ({ user }) => {
           {user && (
             <li><NavLink to="/student-dashboard" className="nav-link" onClick={closeMobileMenu}>Dashboard</NavLink></li>
           )}
+
+          {/* Savings Link */}
+          <li><NavLink to="/savings-dashboard" className="nav-link" onClick={closeMobileMenu}>Savings</NavLink></li>
 
           <li><NavLink to="/admin" className="nav-link" onClick={closeMobileMenu}>Admin</NavLink></li>
         </ul>
@@ -114,7 +117,7 @@ const Navbar = ({ user }) => {
               <span className="nav-link" onClick={() => scrollToSection(sec.id)}>{sec.label}</span>
             </li>
           ))}
-          <li><NavLink to="/shop" className="nav-link" onClick={closeMobileMenu}>Laptop Shop</NavLink></li>
+          <li><NavLink to="/laptop-shop" className="nav-link" onClick={closeMobileMenu}>Laptop Shop</NavLink></li>
 
           {!user && (
             <>
@@ -126,6 +129,9 @@ const Navbar = ({ user }) => {
           {user && (
             <li><NavLink to="/student-dashboard" className="nav-link" onClick={closeMobileMenu}>Dashboard</NavLink></li>
           )}
+
+          {/* Savings Link */}
+          <li><NavLink to="/savings-dashboard" className="nav-link" onClick={closeMobileMenu}>Savings</NavLink></li>
 
           <li><NavLink to="/admin" className="nav-link" onClick={closeMobileMenu}>Admin</NavLink></li>
         </ul>

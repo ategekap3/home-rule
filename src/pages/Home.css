@@ -269,3 +269,18 @@ section h2 {
     font-size: 0.9rem;
   }
 }
+.btn-savings {
+  padding: 12px 20px;
+  background-color: #10b981; /* green */
+  color: white;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.3s ease-in-out;
+  margin-left: 10px;
+}
+
+.btn-savings:hover {
+  background-color: #059669;
+}

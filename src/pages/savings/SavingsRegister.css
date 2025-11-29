@@ -1,0 +1,60 @@
+.savings-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: url('/src/assets/back.jpeg') no-repeat center/cover;
+  padding: 20px;
+}
+
+.savings-form {
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.savings-form input[type="text"],
+.savings-form input[type="email"],
+.savings-form input[type="number"] {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.btn-primary {
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.error {
+  color: red;
+  font-size: 14px;
+  text-align: center;
+}
+
+.success-message {
+  color: green;
+  font-size: 14px;
+  text-align: center;
+}
+
+.terms {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+}

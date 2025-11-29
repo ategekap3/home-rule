@@ -5,10 +5,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 // Components & Pages
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import PhoneLogin from "./pages/students/PhoneLogin";
 
-
-
+// Home & Sections
 import Home from "./pages/Home";
 import EnrollNow from "./pages/enroll-now";
 import LaptopShop from "./components/ShopSection";
@@ -16,12 +14,20 @@ import LaptopShop from "./components/ShopSection";
 // Students
 import StudentLogin from "./pages/students/StudentLogin";
 import StudentRegister from "./pages/students/StudentRegister";
-import PhoneRegister from "./pages/students/PhoneRegister"; // NEW
 import StudentsDashboard from "./pages/students/StudentsDashboard";
 
 // Admin
 import Admin from "./pages/Admin";
 import AdminLogin from "./pages/AdminLogin";
+
+// Savings Account
+import SavingsDashboard from "./pages/savings/SavingsDashboard";
+import SavingsRegister from "./pages/savings/SavingsRegister";
+import SavingsTerms from "./pages/savings/SavingsTerms";
+import SavingsPlans from "./pages/savings/SavingPlans";
+import SavingsWhy from "./pages/savings/SavingsWhy";
+import SavingsMemberLogin from "./pages/savings/SavingsMemberLogin";
+import SavingsMemberDashboard from "./pages/savings/SavingsMemberDashboard";
 
 // Firebase
 import { auth } from "./components/firebase";
@@ -49,11 +55,8 @@ function App() {
         <Route path="/laptop-shop" element={<LaptopShop />} />
 
         {/* Student Routes */}
-
-         <Route path="/phone-login" element={<PhoneLogin />} />
         <Route path="/student-login" element={<StudentLogin />} />
         <Route path="/student-register" element={<StudentRegister />} />
-        <Route path="/student-phone-register" element={<PhoneRegister />} /> {/* OTP phone register */}
         <Route
           path="/student-dashboard"
           element={
@@ -73,6 +76,19 @@ function App() {
             </PrivateAdminRoute>
           }
         />
+
+        {/* Savings Landing Dashboard */}
+        <Route path="/savings-dashboard" element={<SavingsDashboard />} />
+
+        {/* Savings Member Routes */}
+        <Route path="/savings-login" element={<SavingsMemberLogin />} />
+        <Route path="/savings-member-dashboard" element={<SavingsMemberDashboard />} />
+
+        {/* Savings Info Pages */}
+        <Route path="/savings-register" element={<SavingsRegister />} />
+        <Route path="/savings-terms" element={<SavingsTerms />} />
+        <Route path="/savings-plans" element={<SavingsPlans />} />
+        <Route path="/savings-why" element={<SavingsWhy />} />
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
