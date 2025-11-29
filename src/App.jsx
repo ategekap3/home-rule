@@ -21,7 +21,7 @@ import Admin from "./pages/Admin";
 import AdminLogin from "./pages/AdminLogin";
 
 // Savings Account
-import SavingsDashboard from "./pages/savings/SavingsDashboard";
+import SavingsDashboard from "./pages/savings/SavingsDashBoard";
 import SavingsRegister from "./pages/savings/SavingsRegister";
 import SavingsTerms from "./pages/savings/SavingsTerms";
 import SavingsPlans from "./pages/savings/SavingPlans";
