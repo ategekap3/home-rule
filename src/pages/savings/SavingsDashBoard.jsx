@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import './Savings.css';
+import './AccountSavings.css';
 
 const SavingsDashboard = () => {
   return (

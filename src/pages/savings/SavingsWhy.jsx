@@ -1,6 +1,6 @@
 // src/pages/savings/SavingsWhy.jsx
 import React from "react";
-import './Savings.css';
+import './AccountSavings.css';
 import BackToDashboard from "../../components/BackToDashboard";
 
 const SavingsWhy = () => {

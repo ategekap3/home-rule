@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { db, auth } from "../../components/firebase";
 import { doc, getDoc, collection, query, where, onSnapshot, orderBy } from "firebase/firestore";
-import './Savings.css';
+import './AccountSavings.css';
 
 const SavingsMemberDashboard = () => {
   const location = useLocation();

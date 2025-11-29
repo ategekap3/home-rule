@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { db } from "../../components/firebase";
 import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
-import './savings.css';
+import './AccountSavings.css';
 
 const SavingsRegister = () => {
   const navigate = useNavigate();
