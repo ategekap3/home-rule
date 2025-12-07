@@ -1,5 +1,6 @@
-import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+// src/pages/Home.jsx
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
@@ -22,21 +23,37 @@ import editing1 from '../assets/editing1.jpeg';
 import editing2 from '../assets/editing2.jpeg';
 import heroBg from '../assets/hero-gb.jpeg';
 
+import { auth } from "../components/firebase";
+
 import './Home.css';
 
 const Home = () => {
+  const navigate = useNavigate();
+  const [memberLoggedIn, setMemberLoggedIn] = useState(false);
+
   useEffect(() => {
     AOS.init({ duration: 800, once: true });
+
+    // Check Firebase auth state for savings member
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      if (user) setMemberLoggedIn(true);
+      else setMemberLoggedIn(false);
+    });
+
+    return () => unsubscribe();
   }, []);
 
-  const scrollToShop = () => {
-    const shopSection = document.getElementById('shop');
-    if (shopSection) shopSection.scrollIntoView({ behavior: 'smooth' });
+  const scrollToSection = (id) => {
+    const section = document.getElementById(id);
+    if (section) section.scrollIntoView({ behavior: "smooth" });
   };
 
-  const scrollToBirthday = () => {
-    const birthdaySection = document.getElementById('birthday');
-    if (birthdaySection) birthdaySection.scrollIntoView({ behavior: 'smooth' });
+  const handleSavingsCTA = () => {
+    if (memberLoggedIn) {
+      navigate("/savings-member-dashboard"); // go to member dashboard
+    } else {
+      navigate("/savings-login"); // go to login
+    }
   };
 
   return (
@@ -53,12 +70,12 @@ const Home = () => {
             <p>Empowering you with the latest IT skills and affordable technology solutions.</p>
 
             <div className="hero-buttons">
-              <a href="#courses" className="btn-primary">Explore Courses</a>
+              <button className="btn-primary" onClick={() => scrollToSection("courses")}>Explore Courses</button>
               <Link to="/student-login" className="btn-secondary">Student Login</Link>
               <Link to="/student-register" className="btn-secondary">Register</Link>
-              <button className="btn-primary" onClick={scrollToShop}>Buy Laptops</button>
-              <button className="btn-primary" onClick={scrollToBirthday}>Birthday Countdown</button>
-              <Link to="/savings-dashboard" className="btn-primary">Access Savings</Link>
+              <button className="btn-primary" onClick={() => scrollToSection("shop")}>Buy Laptops</button>
+              <button className="btn-primary" onClick={() => scrollToSection("birthday")}>Birthday Countdown</button>
+              <button className="btn-primary" onClick={handleSavingsCTA}>Access Savings</button>
             </div>
           </div>
         </div>

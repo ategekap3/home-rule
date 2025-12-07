@@ -1,9 +1,9 @@
 // src/pages/savings/SavingsLogin.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../components/firebase";
-import './AccountSavings.css';
+import { query, collection, where, getDocs } from "firebase/firestore";
+import "./AccountSavings.css";
 
 const SavingsLogin = () => {
   const navigate = useNavigate();
@@ -16,33 +16,56 @@ const SavingsLogin = () => {
     setError("");
 
     if (!accountId || !password) {
-      setError("All fields are required.");
+      setError("Both Account ID and Password are required.");
       return;
     }
 
-    const docRef = doc(db, "savingsAccounts", accountId);
-    const docSnap = await getDoc(docRef);
+    try {
+      const q = query(
+        collection(db, "savingsAccounts"),
+        where("accountId", "==", accountId)
+      );
+      const querySnap = await getDocs(q);
 
-    if (!docSnap.exists()) {
-      setError("Account ID not found.");
-      return;
+      if (querySnap.empty) {
+        setError("No account found with this Account ID.");
+        return;
+      }
+
+      const member = querySnap.docs[0].data();
+
+      if (member.password !== password) {
+        setError("Incorrect password.");
+        return;
+      }
+
+      // Redirect to dashboard with accountId
+      navigate("/savings-member-dashboard", { state: { accountId: member.accountId } });
+
+    } catch (err) {
+      console.error(err);
+      setError("Failed to login. Please try again.");
     }
-
-    const data = docSnap.data();
-    if (data.password !== password) {
-      setError("Incorrect password.");
-      return;
-    }
-
-    navigate("/savings-dashboard");
   };
 
   return (
     <div className="savings-dashboard-container">
-      <h1>Savings Account Login</h1>
+      <h1>Savings Member Login</h1>
       <form className="savings-form" onSubmit={handleLogin}>
-        <input type="text" placeholder="Account ID" value={accountId} onChange={e => setAccountId(e.target.value)} />
-        <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} />
+        <input
+          type="text"
+          placeholder="Account ID"
+          value={accountId}
+          onChange={(e) => setAccountId(e.target.value)}
+          className="savings-input"
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="savings-input"
+        />
         {error && <div className="error">{error}</div>}
         <button type="submit" className="btn-primary">Login</button>
       </form>

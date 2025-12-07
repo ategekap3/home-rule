@@ -21,13 +21,12 @@ import Admin from "./pages/Admin";
 import AdminLogin from "./pages/AdminLogin";
 
 // Savings Account
-import SavingsDashboard from "./pages/savings/SavingsDashBoard";
 import SavingsRegister from "./pages/savings/SavingsRegister";
-import SavingsTerms from "./pages/savings/SavingsTerms";
+import SavingsLogin from "./pages/savings/SavingsDashboard"; // Login page
+import SavingsDashboard from "./pages/savings/SavingsMemberDashboard"; // Member dashboard
 import SavingsPlans from "./pages/savings/SavingPlans";
+import SavingsTerms from "./pages/savings/SavingsTerms";
 import SavingsWhy from "./pages/savings/SavingsWhy";
-import SavingsMemberLogin from "./pages/savings/SavingsMemberLogin";
-import SavingsMemberDashboard from "./pages/savings/SavingsMemberDashboard";
 
 // Firebase
 import { auth } from "./components/firebase";
@@ -42,6 +41,13 @@ function PrivateStudentRoute({ children }) {
 function PrivateAdminRoute({ children }) {
   if (auth.currentUser) return children;
   return <Navigate to="/admin-login" replace />;
+}
+
+// Protect Savings Member Route
+function PrivateSavingsMemberRoute({ children }) {
+  const memberId = localStorage.getItem("savingsMemberId");
+  if (memberId) return children;
+  return <Navigate to="/savings-login" replace />;
 }
 
 function App() {
@@ -77,14 +83,16 @@ function App() {
           }
         />
 
-        {/* Savings Landing Dashboard */}
-        <Route path="/savings-dashboard" element={<SavingsDashboard />} />
-
-        {/* Savings Member Routes */}
-        <Route path="/savings-login" element={<SavingsMemberLogin />} />
-        <Route path="/savings-member-dashboard" element={<SavingsMemberDashboard />} />
-
-        {/* Savings Info Pages */}
+        {/* Savings Routes */}
+        <Route path="/savings-login" element={<SavingsLogin />} />
+        <Route
+          path="/savings-member-dashboard"
+          element={
+            <PrivateSavingsMemberRoute>
+              <SavingsDashboard />
+            </PrivateSavingsMemberRoute>
+          }
+        />
         <Route path="/savings-register" element={<SavingsRegister />} />
         <Route path="/savings-terms" element={<SavingsTerms />} />
         <Route path="/savings-plans" element={<SavingsPlans />} />

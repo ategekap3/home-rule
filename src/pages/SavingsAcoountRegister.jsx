@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { setDoc, doc, serverTimestamp } from "firebase/firestore";
-import { db } from "../../components/firebase";
+import { db } from "../components/firebase";
 import { useNavigate } from "react-router-dom";
-import "./Savings.css";
+import "./savings/AccountSavings.css";
 
 const SavingsRegister = () => {
   const navigate = useNavigate();

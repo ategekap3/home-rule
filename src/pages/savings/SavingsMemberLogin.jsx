@@ -16,45 +16,37 @@ const SavingsMemberLogin = () => {
     setError("");
 
     if (!accountId || !password) {
-      setError("Both fields are required.");
+      setError("Please enter both Account ID and Password.");
       return;
     }
 
     try {
-      const docRef = doc(db, "savingsAccounts", accountId);
-      const docSnap = await getDoc(docRef);
+      const accountRef = doc(db, "savingsAccounts", accountId);
+      const accountSnap = await getDoc(accountRef);
 
-      if (!docSnap.exists()) {
-        setError("Invalid Account ID. Contact the admin.");
+      if (!accountSnap.exists()) {
+        setError("Invalid Account ID. Contact admin if you don’t have one.");
         return;
       }
 
-      const data = docSnap.data();
-
-      if (!data.password) {
-        setError("Account not registered yet. Complete registration first.");
+      const accountData = accountSnap.data();
+      if (accountData.password !== password) {
+        setError("Incorrect password. Try again.");
         return;
       }
 
-      if (data.password !== password) {
-        setError("Incorrect password.");
-        return;
-      }
-
-      // Login successful, redirect to member dashboard
-      // Pass account ID as state or you can use context/auth state
-      navigate("/savings-member-dashboard", { state: { accountId } });
-
+      // Successful login
+      navigate("/savings-member-dashboard");
     } catch (err) {
       console.error(err);
-      setError("Login failed. Try again later.");
+      setError("Something went wrong. Please try again.");
     }
   };
 
   return (
     <div className="savings-dashboard-container">
-      <h1>Member Login</h1>
-      <p>Enter your Account ID and password to access your savings account.</p>
+      <h2>Member Login</h2>
+      <p>Enter your Account ID and Password to access your savings dashboard.</p>
 
       <form className="savings-form" onSubmit={handleLogin}>
         <input
@@ -79,9 +71,12 @@ const SavingsMemberLogin = () => {
         </button>
       </form>
 
-      <Link to="/savings-dashboard" className="btn-secondary" style={{ marginTop: "20px", display: "inline-block" }}>
-        Back to Dashboard
-      </Link>
+      <p style={{ marginTop: "15px", textAlign: "center" }}>
+        Don't have an account?{" "}
+        <Link to="/savings-register" className="btn-secondary">
+          Register here
+        </Link>
+      </p>
     </div>
   );
 };
