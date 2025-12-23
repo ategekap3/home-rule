@@ -2,14 +2,12 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
-// Components & Pages
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
-// Home & Sections
+// Pages
 import Home from "./pages/Home";
 import EnrollNow from "./pages/enroll-now";
-import LaptopShop from "./components/ShopSection";
 
 // Students
 import StudentLogin from "./pages/students/StudentLogin";
@@ -20,34 +18,35 @@ import StudentsDashboard from "./pages/students/StudentsDashboard";
 import Admin from "./pages/Admin";
 import AdminLogin from "./pages/AdminLogin";
 
-// Savings Account
+// Savings
+import SavingsDashboard from "./pages/savings/SavingsDashboard";
 import SavingsRegister from "./pages/savings/SavingsRegister";
-import SavingsLogin from "./pages/savings/SavingsDashboard"; // Login page
-import SavingsDashboard from "./pages/savings/SavingsMemberDashboard"; // Member dashboard
-import SavingsPlans from "./pages/savings/SavingPlans";
 import SavingsTerms from "./pages/savings/SavingsTerms";
-import SavingsWhy from "./pages/savings/SavingsWhy";
+import SavingsPlans from "./pages/savings/SavingPlans";
+import SavingsMemberDashboard from "./pages/savings/SavingsMemberDashboard";
 
-// Firebase
+// Firebase (ONLY for admin & students)
 import { auth } from "./components/firebase";
 
-// Protect Student Route
+/* ================= PROTECTED ROUTES ================= */
+
+// Student
 function PrivateStudentRoute({ children }) {
   if (auth.currentUser) return children;
   return <Navigate to="/student-login" replace />;
 }
 
-// Protect Admin Route
+// Admin
 function PrivateAdminRoute({ children }) {
   if (auth.currentUser) return children;
   return <Navigate to="/admin-login" replace />;
 }
 
-// Protect Savings Member Route
+// ✅ Savings Member (LOCAL STORAGE – NOT FIREBASE AUTH)
 function PrivateSavingsMemberRoute({ children }) {
-  const memberId = localStorage.getItem("savingsMemberId");
-  if (memberId) return children;
-  return <Navigate to="/savings-login" replace />;
+  const accountId = localStorage.getItem("savingsAccountId");
+  if (accountId) return children;
+  return <Navigate to="/savings-dashboard" replace />;
 }
 
 function App() {
@@ -55,12 +54,11 @@ function App() {
     <Router>
       <Navbar />
       <Routes>
-        {/* Public Routes */}
+        {/* Public */}
         <Route path="/" element={<Home />} />
         <Route path="/enroll-now" element={<EnrollNow />} />
-        <Route path="/laptop-shop" element={<LaptopShop />} />
 
-        {/* Student Routes */}
+        {/* Students */}
         <Route path="/student-login" element={<StudentLogin />} />
         <Route path="/student-register" element={<StudentRegister />} />
         <Route
@@ -72,7 +70,7 @@ function App() {
           }
         />
 
-        {/* Admin Routes */}
+        {/* Admin */}
         <Route path="/admin-login" element={<AdminLogin />} />
         <Route
           path="/admin"
@@ -83,20 +81,21 @@ function App() {
           }
         />
 
-        {/* Savings Routes */}
-        <Route path="/savings-login" element={<SavingsLogin />} />
+        {/* Savings */}
+        <Route path="/savings-dashboard" element={<SavingsDashboard />} />
+        <Route path="/savings-login" element={<SavingsDashboard />} />
+        <Route path="/savings-register" element={<SavingsRegister />} />
+        <Route path="/savings-terms" element={<SavingsTerms />} />
+        <Route path="/savings-plans" element={<SavingsPlans />} />
+
         <Route
           path="/savings-member-dashboard"
           element={
             <PrivateSavingsMemberRoute>
-              <SavingsDashboard />
+              <SavingsMemberDashboard />
             </PrivateSavingsMemberRoute>
           }
         />
-        <Route path="/savings-register" element={<SavingsRegister />} />
-        <Route path="/savings-terms" element={<SavingsTerms />} />
-        <Route path="/savings-plans" element={<SavingsPlans />} />
-        <Route path="/savings-why" element={<SavingsWhy />} />
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
