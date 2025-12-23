@@ -81,10 +81,10 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Birthday Section */}
+ { /*   {/* Birthday Section 
       <section id="birthday" data-aos="fade-up" style={{ backgroundColor: "#fff3e0", padding: "40px 0" }}>
-        <BirthdayWidget />
-      </section>
+       
+      </section>* */}
 
       {/* Courses Section */}
       <section id="courses" className="courses-section" data-aos="fade-up" style={{ backgroundColor: "#f9fafb", padding: "40px 0" }}>

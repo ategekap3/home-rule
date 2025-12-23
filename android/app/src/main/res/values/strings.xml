@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Modern Computer World Ug</string>
+    <string name="title_activity_main">Modern Computer World Ug</string>
+    <string name="package_name">com.moderncomputerworld.ug</string>
+    <string name="custom_url_scheme">com.moderncomputerworld.ug</string>
+</resources>

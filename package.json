@@ -12,6 +12,11 @@
     "test": "vitest"
   },
   "dependencies": {
+    "@capacitor/android": "^8.0.0",
+    "@capacitor/cli": "^8.0.0",
+    "@capacitor/core": "^8.0.0",
+    "@capacitor/push-notifications": "^8.0.0",
+    "@capacitor/status-bar": "^8.0.0",
     "aos": "^2.3.4",
     "firebase": "^12.5.0",
     "framer-motion": "^12.23.24",
