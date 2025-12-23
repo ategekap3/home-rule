@@ -1,320 +1,303 @@
-/* src/pages/savings/AccountSavings.css */
+/* =========================
+   GLOBAL RESET & VARIABLES
+========================= */
 
-/* ------------------ General Reset & Container ------------------ */
-body, html {
+:root {
+  --primary: #2563eb;
+  --primary-dark: #1e40af;
+  --bg-light: #f5f7fb;
+  --bg-dark: #0f172a;
+  --card-light: #ffffff;
+  --card-dark: #1e293b;
+  --text-light: #1f2937;
+  --text-dark: #e5e7eb;
+  --muted: #6b7280;
+  --success: #16a34a;
+  --danger: #dc2626;
+}
+
+* {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  min-height: 100%;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f3f4f6;
 }
 
-/* Main container for Savings pages */
-.savings-dashboard-container,
-.savings-container,
-.terms-container,
-.savings-member-dashboard,
-.admin-container {
-  max-width: 1000px;
-  margin: 20px auto;
-  padding: 20px 30px;
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, sans-serif;
+  background: var(--bg-light);
+  color: var(--text-light);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* =========================
+   DARK MODE
+========================= */
+
+body.dark {
+  background: var(--bg-dark);
+  color: var(--text-dark);
+}
+
+/* =========================
+   SHARED CONTAINERS
+========================= */
+
+.savings-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+}
+
+/* =========================
+   FORMS (LOGIN / REGISTER)
+========================= */
+
+.savings-form {
+  background: var(--card-light);
+  width: 100%;
+  max-width: 420px;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  box-sizing: border-box;
+  gap: 14px;
+  animation: fadeInUp 0.5s ease;
 }
 
-/* Headings */
-h1, h2, h3 {
-  color: #111827;
+body.dark .savings-form {
+  background: var(--card-dark);
+}
+
+.savings-form h2 {
   text-align: center;
-  margin-bottom: 15px;
+  font-size: 1.4rem;
 }
 
-/* Paragraphs */
-p {
-  color: #374151;
-  font-size: 16px;
-  line-height: 1.6;
+.savings-form input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  font-size: 0.95rem;
 }
 
-/* Lists */
-ul {
-  padding-left: 20px;
-  margin-bottom: 15px;
+body.dark .savings-form input {
+  background: #020617;
+  border-color: #334155;
+  color: var(--text-dark);
 }
 
-li {
-  margin-bottom: 5px;
+.savings-form input:focus {
+  outline: none;
+  border-color: var(--primary);
 }
 
-/* ------------------ Buttons ------------------ */
-.btn-primary, .btn-secondary, button {
-  padding: 12px 25px;
-  border-radius: 8px;
-  font-size: 16px;
-  cursor: pointer;
-  text-decoration: none;
-  font-weight: bold;
-  transition: all 0.3s ease;
-  border: none;
-}
+/* =========================
+   BUTTONS
+========================= */
 
 .btn-primary {
-  background-color: #2563eb;
-  color: #fff;
-}
-.btn-primary:hover { background-color: #1d4ed8; }
-
-.btn-secondary {
-  background-color: #fbbf24;
-  color: #111827;
-}
-.btn-secondary:hover { background-color: #f59e0b; }
-
-.btn-disabled {
-  background-color: #9ca3af;
-  cursor: not-allowed;
-}
-
-/* ------------------ Forms ------------------ */
-.savings-form, .terms-container form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  width: 100%;
-  max-width: 500px;
-  margin: 0 auto;
-}
-
-.savings-input, .savings-form textarea {
-  padding: 12px 15px;
-  font-size: 16px;
-  border-radius: 8px;
-  border: 1px solid #d1d5db;
-  outline: none;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.savings-input:focus, .savings-form textarea:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37,99,235,0.2);
-}
-
-.terms-checkbox, .terms-warning {
-  margin-top: 10px;
-}
-
-.terms-checkbox {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 14px;
-}
-
-.error {
-  color: #b91c1c;
-  font-weight: bold;
-  text-align: center;
-}
-
-.success-message {
-  color: #15803d;
-  font-weight: bold;
-  text-align: center;
-}
-
-/* ------------------ Savings Member Dashboard ------------------ */
-.savings-wrapper, .admin-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.savings-list, .students-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.savings-item, .student-item {
-  border: 1px solid #ddd;
-  padding: 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  background-color: #fff;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.savings-item.selected, .student-item.selected {
-  border-color: #2563eb;
-  box-shadow: 0 0 10px rgba(37,99,235,0.2);
-}
-
-/* Update balance and messages */
-.update-balance, .savings-message, .chat-form {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.update-balance input, .savings-message textarea, .chat-form input {
-  flex: 1;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 16px;
-}
-
-.savings-message textarea {
-  resize: vertical;
-  height: 60px;
-}
-
-.chat-form button, .update-balance button, .savings-message button {
-  padding: 10px 15px;
-  border-radius: 6px;
-  background-color: #2563eb;
+  background: var(--primary);
   color: #fff;
   border: none;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 1rem;
   cursor: pointer;
+  transition: all 0.25s ease;
 }
 
-.chat-form button:hover,
-.update-balance button:hover,
-.savings-message button:hover {
-  background-color: #1d4ed8;
+.btn-primary:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
 }
 
-/* ------------------ Admin Table ------------------ */
-.table-container {
+/* =========================
+   ERROR & STATUS
+========================= */
+
+.error {
+  background: #fee2e2;
+  color: var(--danger);
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+.success {
+  background: #dcfce7;
+  color: var(--success);
+  padding: 10px;
+  border-radius: 8px;
+}
+
+/* =========================
+   MEMBER DASHBOARD
+========================= */
+
+.member-dashboard {
+  background: var(--card-light);
+  width: 100%;
+  max-width: 900px;
+  padding: 24px;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  animation: fadeIn 0.4s ease;
+}
+
+body.dark .member-dashboard {
+  background: var(--card-dark);
+}
+
+.member-dashboard h2 {
+  margin-bottom: 12px;
+}
+
+.member-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.member-info div {
+  background: rgba(37, 99, 235, 0.08);
+  padding: 14px;
+  border-radius: 12px;
+}
+
+/* =========================
+   TRANSACTION HISTORY
+========================= */
+
+.transactions {
   overflow-x: auto;
 }
 
-table {
+.transactions table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 15px;
+  min-width: 600px;
 }
 
-th, td {
+.transactions th,
+.transactions td {
   padding: 12px;
-  border: 1px solid #ddd;
   text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 0.9rem;
 }
 
-th {
-  background-color: #f3f4f6;
-  color: #111827;
+body.dark .transactions th,
+body.dark .transactions td {
+  border-color: #334155;
 }
 
-tr:nth-child(even) {
-  background-color: #f9fafb;
+.transactions th {
+  background: #e0e7ff;
 }
 
-.member-actions {
-  margin-top: 15px;
-  padding: 15px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background-color: #fefefe;
+body.dark .transactions th {
+  background: #020617;
 }
 
-/* Admin Header & Tabs */
-.admin-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+.amount-positive {
+  color: var(--success);
+  font-weight: 600;
 }
 
-.logout-btn {
-  background-color: #ef4444;
-  color: #fff;
-  padding: 10px 18px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
+.amount-negative {
+  color: var(--danger);
+  font-weight: 600;
 }
 
-.admin-tabs {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 20px;
+/* =========================
+   ADMIN DASHBOARD
+========================= */
+
+.admin-dashboard {
+  width: 100%;
+  max-width: 1200px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
 }
 
-.admin-tabs button {
-  padding: 10px 15px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  background-color: #e5e7eb;
-  font-weight: bold;
-}
-
-.admin-tabs button.active {
-  background-color: #2563eb;
-  color: #fff;
-}
-
-/* ------------------ Footer ------------------ */
-.savings-footer {
-  margin-top: auto;
+.admin-card {
+  background: var(--card-light);
   padding: 20px;
-  background-color: #343a40;
-  color: #fff;
-  text-align: center;
-  border-radius: 0 0 12px 12px;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  animation: fadeInUp 0.4s ease;
 }
 
-/* ------------------ Responsive ------------------ */
+body.dark .admin-card {
+  background: var(--card-dark);
+}
+
+.admin-card h3 {
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+.admin-card p {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-top: 8px;
+}
+
+/* =========================
+   ANALYTICS PLACEHOLDER
+========================= */
+
+.analytics-chart {
+  height: 180px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #2563eb, #60a5fa);
+  opacity: 0.85;
+  margin-top: 12px;
+}
+
+/* =========================
+   ANIMATIONS
+========================= */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================
+   RESPONSIVE FIXES
+========================= */
+
 @media (max-width: 768px) {
-  .savings-dashboard-container,
-  .savings-container,
-  .terms-container,
-  .savings-member-dashboard,
-  .admin-container {
-    padding: 15px;
-  }
-
-  .savings-nav-buttons, .admin-tabs {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .btn-primary, .btn-secondary, button {
-    width: 100%;
-  }
-
-  .update-balance, .savings-message, .chat-form {
-    flex-direction: column;
-  }
-
-  .table-container table, .table-container th, .table-container td {
-    font-size: 14px;
+  .savings-form,
+  .member-dashboard {
+    padding: 18px;
   }
 }
 
 @media (max-width: 480px) {
-  h1, h2, h3 {
-    font-size: 20px;
-  }
-
-  p, li {
-    font-size: 14px;
-  }
-
-  .savings-input, .savings-form textarea {
-    font-size: 14px;
-  }
-
-  .chat-box {
-    max-height: 200px;
+  .btn-primary {
+    font-size: 0.95rem;
   }
 }
