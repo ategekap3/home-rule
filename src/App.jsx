@@ -19,7 +19,7 @@ import Admin from "./pages/Admin";
 import AdminLogin from "./pages/AdminLogin";
 
 // Savings
-import SavingsDashboard from "./pages/savings/SavingsDashboard";
+import SavingsMemberDashboard from "./pages/savings/SavingsMemberDashboard";
 import SavingsRegister from "./pages/savings/SavingsRegister";
 import SavingsTerms from "./pages/savings/SavingsTerms";
 import SavingsPlans from "./pages/savings/SavingPlans";
