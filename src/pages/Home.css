@@ -1,3 +1,5 @@
+/* src/pages/Home.css */
+
 /* General Container */
 .home-container {
   font-family: 'Arial', sans-serif;
@@ -8,218 +10,9 @@
 /* Hero Section */
 .hero-section {
   position: relative;
-  height: 90vh;
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.hero-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.45);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 0 20px;
-}
-
-.hero-content h1 {
-  color: #fff;
-  font-size: 3rem;
-  margin-bottom: 15px;
-}
-
-.hero-content p {
-  color: #f0f0f0;
-  font-size: 1.2rem;
-  margin-bottom: 20px;
-}
-
-.btn-primary {
-  background-color: #2563eb;
-  color: #fff;
-  padding: 12px 28px;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: bold;
-  transition: 0.3s;
-}
-
-.btn-primary:hover {
-  background-color: #1e40af;
-}
-
-/* Sections */
-section {
-  padding: 60px 20px;
-}
-
-section h2 {
-  font-size: 2rem;
-  text-align: center;
-  margin-bottom: 40px;
-  color: #111827;
-}
-
-/* Services Grid */
-.services-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-}
-
-/* Courses & Shop Section Styling */
-.courses-section, .shop-section {
-  text-align: center;
-}
-
-/* Laptop Shop Cards */
-.shop-section .p-6 {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-}
-
-.shop-section img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: 12px;
-}
-
-.shop-section h2 {
-  margin-bottom: 30px;
-}
-
-/* Gallery Section */
-.gallery-section {
-  text-align: center;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .hero-content h1 {
-    font-size: 2rem;
-  }
-
-  .hero-content p {
-    font-size: 1rem;
-  }
-}
-.hero-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 20px;
-}
-
-.hero-buttons .btn-primary {
-  background-color: #2563eb;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 600;
-  transition: background 0.2s;
-}
-
-.hero-buttons .btn-primary:hover {
-  background-color: #1e40af;
-}
-
-.hero-buttons .btn-secondary {
-  background-color: #f3f4f6;
-  color: #111827;
-  padding: 10px 20px;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 600;
-  transition: background 0.2s, color 0.2s;
-}
-
-.hero-buttons .btn-secondary:hover {
-  background-color: #e5e7eb;
-  color: #1f2937;
-}
-
-@media (max-width: 640px) {
-  .hero-buttons {
-    flex-direction: column;
-    align-items: center;
-  }
-}
-
-.hero-buttons {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-  margin-top: 20px;
-}
-
-.btn-secondary {
-  background-color: #2563eb;
-  color: white;
-  padding: 0.7rem 1.2rem;
-  border-radius: 8px;
-  text-decoration: none;
-  transition: 0.3s;
-}
-
-.btn-secondary:hover {
-  background-color: #1e40af;
-}
-.hero-buttons {
-  margin-top: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  justify-content: center;
-}
-
-.btn-primary {
-  padding: 10px 20px;
-  background-color: #3b82f6; /* blue */
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.btn-primary:hover {
-  background-color: #2563eb;
-}
-
-.btn-secondary {
-  padding: 10px 20px;
-  background-color: #facc15; /* yellow */
-  border: none;
-  border-radius: 6px;
-  color: #111827;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.btn-secondary:hover {
-  background-color: #eab308;
-  color: white;
-}
-/* Home.css */
-
-.hero-section {
-  position: relative;
-  background-size: cover;
-  background-position: center;
   height: 80vh;
+  background-size: cover;
+  background-position: center;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -249,38 +42,68 @@ section h2 {
   margin-bottom: 2rem;
 }
 
-.hero-buttons .btn-primary,
-.hero-buttons .btn-secondary {
-  margin: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-}
-
-@media (max-width: 768px) {
-  .hero-content h1 {
-    font-size: 2rem;
-  }
-  .hero-content p {
-    font-size: 1rem;
-  }
-  .hero-buttons .btn-primary,
-  .hero-buttons .btn-secondary {
-    width: 80%;
-    font-size: 0.9rem;
-  }
-}
-.btn-savings {
-  padding: 12px 20px;
-  background-color: #10b981; /* green */
-  color: white;
+/* Buttons */
+.btn-primary, .btn-secondary, .btn-savings {
+  cursor: pointer;
   border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: 0.3s ease-in-out;
-  margin-left: 10px;
+  font-weight: bold;
+  transition: all 0.3s ease;
 }
 
-.btn-savings:hover {
-  background-color: #059669;
+/* Animations */
+@keyframes fadeInUp {
+  0% { opacity: 0; transform: translateY(30px);}
+  100% { opacity: 1; transform: translateY(0);}
 }
+
+.animate-fadeInUp {
+  animation: fadeInUp 1s forwards;
+}
+
+.animate-fadeInUp.delay-200 { animation-delay: 0.2s; }
+.animate-fadeInUp.delay-400 { animation-delay: 0.4s; }
+
+@keyframes pulseButton {
+  0% { transform: scale(1);}
+  50% { transform: scale(1.05);}
+  100% { transform: scale(1);}
+}
+
+.animate-pulse {
+  animation: pulseButton 1.5s infinite;
+}
+
+/* Card Hover */
+.program-card,
+.study-session-card,
+.services-grid div,
+.shop-section div {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.program-card:hover,
+.study-session-card:hover,
+.services-grid div:hover,
+.shop-section div:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 15px 25px rgba(0,0,0,0.2);
+}
+
+/* Grid Containers */
+.grid { display: grid; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero-content h1 { font-size: 2rem; }
+  .hero-content p { font-size: 1rem; }
+}
+
+section .container {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+section h1, section h2 { text-align: center; }

@@ -1,23 +1,34 @@
-import React from "react";
+<div
+  key={course.id}
+  className="course-card"
+  onMouseEnter={() => setHoveredCourse(course.id)}
+  onMouseLeave={() => setHoveredCourse(null)}
+>
+  <img src={course.image} alt={course.name} className="course-image" />
+  <div className="course-info">
+    <h3>{course.name}</h3>
+    <p className="course-fees">{course.fees}</p>
 
-const CourseCard = ({ course, completed, certificate }) => {
-  const progressPercent = completed ? 100 : 50;
+    {isEnrolled ? (
+      <span className="enrolled-badge">Enrolled</span>
+    ) : (
+      <button
+        className="btn-primary"
+        onClick={(e) => {
+          e.stopPropagation();
+          handleEnroll(course.id);
+        }}
+      >
+        Enroll
+      </button>
+    )}
+  </div>
 
-  return (
-    <div className="course-card">
-      <h3>{course.title}</h3>
-      <p>Last Accessed: {course.lastAccessed ? new Date(course.lastAccessed.seconds*1000).toLocaleDateString() : "Not Started"}</p>
-      <div className="progress-bar">
-        <div className="progress" style={{ width: `${progressPercent}%` }}></div>
-      </div>
-      {completed ? (
-        <p>Certificate: Available</p>
-      ) : (
-        <p>Your certificate will appear after course completion</p>
-      )}
-      <button className="btn-primary">Continue</button>
+  {hoveredCourse === course.id && (
+    <div className="hover-description">
+      {course.name === "MS.OFFICE"
+        ? "Includes Word, Excel, Access, PowerPoint, Publisher & Outlook. Free installations included."
+        : "Course description goes here."}
     </div>
-  );
-};
-
-export default CourseCard;
+  )}
+</div>

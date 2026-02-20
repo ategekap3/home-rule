@@ -4,13 +4,19 @@ import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import './NavBar.css';
 
 const sections = [
-  { id: 'courses', label: 'Courses' },
+  { id: 'hero', label: 'Home' },
+  { id: 'about', label: 'About' },
+  { id: 'vision', label: 'Vision' },
+  { id: 'programs', label: 'Programs' },
+  { id: 'shop', label: 'Laptop Shop' },
   { id: 'services', label: 'Services' },
+  { id: 'gallery', label: 'Gallery' },
+  { id: 'enroll', label: 'Enroll' },
 ];
 
 const Navbar = ({ user }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('');
+  const [activeSection, setActiveSection] = useState('hero');
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -22,8 +28,8 @@ const Navbar = ({ user }) => {
     if (location.pathname !== '/') return;
 
     const handleScroll = () => {
-      const scrollPos = window.scrollY + 120;
-      let current = '';
+      const scrollPos = window.scrollY + 120; // offset for sticky navbar
+      let current = 'hero';
       sections.forEach((section) => {
         const el = document.getElementById(section.id);
         if (el && el.offsetTop <= scrollPos) current = section.id;
@@ -53,7 +59,7 @@ const Navbar = ({ user }) => {
   return (
     <nav className={`navbar sticky-navbar ${isScrolled ? 'scrolled' : ''}`}>
       <div className={`nav-container ${isScrolled ? 'small' : ''}`}>
-        <div className="logo-info">
+        <div className="logo-info" onClick={() => scrollToSection('hero')} style={{ cursor: 'pointer' }}>
           <img src="/school-logo.jpeg" alt="School Logo" className="school-logo" />
           <div className="school-text">
             <h1>MODERN COMPUTER WORLD UG</h1>
@@ -63,7 +69,6 @@ const Navbar = ({ user }) => {
 
         {/* Desktop Menu */}
         <ul className={`nav-links ${isMobileMenuOpen ? 'open' : ''}`}>
-          <li><NavLink to="/" className="nav-link" onClick={closeMobileMenu}>Home</NavLink></li>
           {sections.map(sec => (
             <li key={sec.id}>
               <span
@@ -74,22 +79,16 @@ const Navbar = ({ user }) => {
               </span>
             </li>
           ))}
-          <li><NavLink to="/laptop-shop" className="nav-link" onClick={closeMobileMenu}>Laptop Shop</NavLink></li>
 
           {!user && (
-            <>
-              <li><NavLink to="/student-login" className="nav-link" onClick={closeMobileMenu}>Student Login</NavLink></li>
-              <li><NavLink to="/student-register" className="nav-link" onClick={closeMobileMenu}>Register</NavLink></li>
-            </>
+            <li><NavLink to="/student-login" className="nav-link" onClick={closeMobileMenu}>Student Login</NavLink></li>
           )}
 
           {user && (
             <li><NavLink to="/student-dashboard" className="nav-link" onClick={closeMobileMenu}>Dashboard</NavLink></li>
           )}
 
-          {/* Savings Link */}
           <li><NavLink to="/savings-dashboard" className="nav-link" onClick={closeMobileMenu}>Savings</NavLink></li>
-
           <li><NavLink to="/admin" className="nav-link" onClick={closeMobileMenu}>Admin</NavLink></li>
         </ul>
 
@@ -111,28 +110,26 @@ const Navbar = ({ user }) => {
       <div className={`mobile-overlay ${isMobileMenuOpen ? 'show' : ''}`} onClick={closeMobileMenu}></div>
       <div className={`mobile-menu ${isMobileMenuOpen ? 'open' : ''}`}>
         <ul>
-          <li><NavLink to="/" className="nav-link" onClick={closeMobileMenu}>Home</NavLink></li>
           {sections.map(sec => (
             <li key={sec.id}>
-              <span className="nav-link" onClick={() => scrollToSection(sec.id)}>{sec.label}</span>
+              <span
+                className={`nav-link ${activeSection === sec.id ? 'active' : ''}`}
+                onClick={() => scrollToSection(sec.id)}
+              >
+                {sec.label}
+              </span>
             </li>
           ))}
-          <li><NavLink to="/laptop-shop" className="nav-link" onClick={closeMobileMenu}>Laptop Shop</NavLink></li>
 
           {!user && (
-            <>
-              <li><NavLink to="/student-login" className="nav-link" onClick={closeMobileMenu}>Student Login</NavLink></li>
-              <li><NavLink to="/student-register" className="nav-link" onClick={closeMobileMenu}>Register</NavLink></li>
-            </>
+            <li><NavLink to="/student-login" className="nav-link" onClick={closeMobileMenu}>Student Login</NavLink></li>
           )}
 
           {user && (
             <li><NavLink to="/student-dashboard" className="nav-link" onClick={closeMobileMenu}>Dashboard</NavLink></li>
           )}
 
-          {/* Savings Link */}
           <li><NavLink to="/savings-dashboard" className="nav-link" onClick={closeMobileMenu}>Savings</NavLink></li>
-
           <li><NavLink to="/admin" className="nav-link" onClick={closeMobileMenu}>Admin</NavLink></li>
         </ul>
       </div>

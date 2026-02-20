@@ -25,10 +25,10 @@ import img4 from "../../assets/img4.jpeg";
 import "./StudentDashboard.css";
 
 const coursesList = [
-  { id: "fundamentals-it", name: "FUNDAMENTALS OF IT", fees: "UGX. 450,000", image: img1 },
-  { id: "graphics-design", name: "GRAPHICS DESIGN", fees: "UGX. 800,000", image: img2 },
-  { id: "programming", name: "PROGRAMMING", fees: "UGX. 1,000,000", image: img3 },
-  { id: "ms-office", name: "MS.OFFICE", fees: "UGX. 500,000", image: img4 },
+  { id: "fundamentals-it", name: "FUNDAMENTALS OF IT", fees: "UGX. 450,000", image: img1, description: "Learn computer basics, internet, hardware, software & IT fundamentals." },
+  { id: "graphics-design", name: "GRAPHICS DESIGN", fees: "UGX. 800,000", image: img2, description: "Master Photoshop, Illustrator, Canva & other design tools." },
+  { id: "programming", name: "PROGRAMMING", fees: "UGX. 1,000,000", image: img3, description: "Learn HTML, CSS, JavaScript, React, and backend basics." },
+  { id: "ms-office", name: "MS.OFFICE", fees: "UGX. 500,000", image: img4, description: "Includes Word, Excel, Access, PowerPoint, Publisher & Outlook with free installations." },
 ];
 
 const StudentDashboard = () => {
@@ -39,7 +39,9 @@ const StudentDashboard = () => {
   const [student, setStudent] = useState(null);
   const [messages, setMessages] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(null);
+  const [hoveredCourse, setHoveredCourse] = useState(null);
 
+  // Fetch student data
   useEffect(() => {
     if (!user) navigate("/student-login");
 
@@ -50,6 +52,7 @@ const StudentDashboard = () => {
     return () => unsubscribe();
   }, [user, navigate]);
 
+  // Fetch messages
   useEffect(() => {
     if (!user) return;
 
@@ -90,6 +93,7 @@ const StudentDashboard = () => {
       <Sidebar active={activeTab} setActive={setActiveTab} handleLogout={handleLogout} />
 
       <main className="dashboard-main">
+        {/* Dashboard main */}
         {activeTab === "Dashboard" && !selectedCourse && (
           <>
             <TopStats
@@ -111,7 +115,8 @@ const StudentDashboard = () => {
                       key={course.id}
                       className="course-card"
                       onClick={() => setSelectedCourse(course)}
-                      style={{ cursor: "pointer" }}
+                      onMouseEnter={() => setHoveredCourse(course.id)}
+                      onMouseLeave={() => setHoveredCourse(null)}
                     >
                       <img src={course.image} alt={course.name} className="course-image" />
                       <div className="course-info">
@@ -121,10 +126,7 @@ const StudentDashboard = () => {
                         {isEnrolled && (
                           <>
                             <div className="progress-container">
-                              <div
-                                className="progress-bar"
-                                style={{ width: `${progressPercentage}%` }}
-                              ></div>
+                              <div className="progress-bar" style={{ width: `${progressPercentage}%` }}></div>
                             </div>
                             <p className="progress-text">{progressPercentage}% completed</p>
                           </>
@@ -145,12 +147,12 @@ const StudentDashboard = () => {
                         )}
 
                         {completed && <span className="certificate-badge completed">Certificate available!</span>}
-                        {!completed && isEnrolled && (
-                          <span className="certificate-badge">
-                            Your certificate will appear after course completion
-                          </span>
-                        )}
                       </div>
+
+                      {/* Hover Description */}
+                      {hoveredCourse === course.id && (
+                        <div className="hover-description">{course.description}</div>
+                      )}
                     </div>
                   );
                 })}
@@ -159,6 +161,7 @@ const StudentDashboard = () => {
           </>
         )}
 
+        {/* Course Detail View */}
         {selectedCourse && (
           <div className="course-details">
             <button
@@ -178,6 +181,7 @@ const StudentDashboard = () => {
               <div className="course-info">
                 <h2>{selectedCourse.name}</h2>
                 <p className="course-fees">{selectedCourse.fees}</p>
+                <p>{selectedCourse.description}</p>
 
                 {student.enrolledCourses?.includes(selectedCourse.id) ? (
                   <>
@@ -210,6 +214,7 @@ const StudentDashboard = () => {
           </div>
         )}
 
+        {/* Messages & Notifications */}
         {activeTab === "Messages" && <MessagePanel messages={messages} user={user} />}
         {activeTab === "Notifications" && <NotificationsPanel notifications={student.notifications} />}
         {activeTab === "Profile" && <ProfileCard student={student} />}

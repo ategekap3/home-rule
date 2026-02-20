@@ -1,9 +1,24 @@
+// src/components/CourseCard.jsx
+import React from 'react';
+import './CourseCard.css';
+
 const CourseCard = ({ course, onClick }) => {
+  if (!course) return null; // prevents undefined errors
+
   return (
-    <div className="course-card" onClick={() => onClick(course)} style={{ cursor: 'pointer', margin: '1rem', border: '1px solid #ccc', padding: '1rem', borderRadius: '8px', width: '220px', textAlign: 'center' }}>
-      <img src={course.image} alt={course.name} style={{ width: '100%', height: '150px', objectFit: 'cover', borderRadius: '4px' }} />
-      <h3>{course.name}</h3>
-      <p>{course.fees}</p>
+    <div className="course-card" onClick={onClick}>
+      <img
+        src={course.image}
+        alt={course.name}
+        className="course-image"
+      />
+
+      {/* Overlay */}
+      <div className="course-overlay">
+        <h3>{course.name}</h3>
+        <p>{course.description}</p>
+        <p className="fees">{course.fees}</p>
+      </div>
     </div>
   );
 };

@@ -1,58 +1,60 @@
 // src/pages/Courses.jsx
 import { useState } from 'react';
-import CourseCard from '../components/CourseCard';
-import StudentRegister from './students/StudentRegister';
-
-// Import images correctly
 import img1 from '../assets/img1.jpg';
 import img2 from '../assets/img2.jpg';
 import img3 from '../assets/img3.jpg';
 import img4 from '../assets/img4.jpeg';
 
 const courses = [
-  { name: 'FUNDAMENTALS OF IT', fees: 'UGX. 450,000', image: img1},
-  { name: 'GRAPHICS DESIGN', fees: 'UGX. 800,000', image: img2 },
-  { name: 'PROGRAMMING', fees: 'UGX. 1000,000', image: img3 },
-  { name: 'MS.OFFICE', fees: 'UGX. 500,000', image: img4 },
+  { name: 'FUNDAMENTALS OF IT', fees: 'UGX. 450,000', image: img1, description: 'Learn computer basics, internet, email, and file management.'},
+  { name: 'GRAPHICS DESIGN', fees: 'UGX. 800,000', image: img2, description: 'Master Photoshop, Illustrator, Canva and digital design.' },
+  { name: 'PROGRAMMING', fees: 'UGX. 1,000,000', image: img3, description: 'Learn Python, JavaScript, HTML, CSS and more.' },
+  { name: 'MS.OFFICE', fees: 'UGX. 500,000', image: img4, description: 'Includes Word, Excel, Access, PowerPoint, Publisher & Outlook. Free installations included.' },
 ];
 
 const Courses = () => {
-  const [selectedCourse, setSelectedCourse] = useState(null);
-
-  const handleCloseForm = () => setSelectedCourse(null);
+  const [hoveredCourse, setHoveredCourse] = useState(null);
 
   return (
     <div style={{ padding: '1rem' }}>
-      <h2>Courses We Offer</h2>
-      {!selectedCourse && (
-        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-          {courses.map(course => (
-            <CourseCard key={course.name} course={course} onClick={() => setSelectedCourse(course.name)} />
-          ))}
-        </div>
-      )}
-
-      {selectedCourse && (
-        <div style={{ marginTop: '2rem' }}>
-          <h3>Enroll in {selectedCourse}</h3>
-          <button
-            onClick={handleCloseForm}
-            style={{
-              marginBottom: '1rem',
-              padding: '8px 12px',
-              borderRadius: '8px',
-              border: 'none',
-              backgroundColor: '#dc3545',
-              color: '#fff',
-              cursor: 'pointer',
-            }}
+      <h2 style={{ textAlign: 'center', marginBottom: '1rem' }}>Courses We Offer</h2>
+      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '1rem' }}>
+        {courses.map(course => (
+          <div
+            key={course.name}
+            className="course-card"
+            onMouseEnter={() => setHoveredCourse(course.name)}
+            onMouseLeave={() => setHoveredCourse(null)}
           >
-            Cancel
-          </button>
-
-          <StudentRegister selectedCourse={selectedCourse} />
-        </div>
-      )}
+            <img src={course.image} alt={course.name} className="course-image" />
+            <div className="course-info">
+              <h3>{course.name}</h3>
+              <p className="course-fees">{course.fees}</p>
+            </div>
+            {hoveredCourse === course.name && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  background: 'rgba(0,0,0,0.8)',
+                  color: 'white',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  textAlign: 'center',
+                  padding: '1rem',
+                  borderRadius: '12px',
+                }}
+              >
+                <p>{course.description}</p>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
