@@ -25,6 +25,10 @@ import SavingsTerms from "./pages/savings/SavingsTerms";
 import SavingsPlans from "./pages/savings/SavingPlans";
 import SavingsMemberDashboard from "./pages/savings/SavingsMemberDashboard";
 
+// Study Sessions
+import StudySessionsPage from "./components/StudySessionsPage";
+import BookSession from "./components/BookSession";
+
 // Firebase (ONLY for admin & students)
 import { auth } from "./components/firebase";
 
@@ -87,7 +91,6 @@ function App() {
         <Route path="/savings-register" element={<SavingsRegister />} />
         <Route path="/savings-terms" element={<SavingsTerms />} />
         <Route path="/savings-plans" element={<SavingsPlans />} />
-
         <Route
           path="/savings-member-dashboard"
           element={
@@ -96,6 +99,10 @@ function App() {
             </PrivateSavingsMemberRoute>
           }
         />
+
+        {/* Study Sessions */}
+        <Route path="/study-sessions" element={<StudySessionsPage />} />
+        <Route path="/book-session" element={<BookSession />} />
 
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />

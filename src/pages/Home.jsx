@@ -25,6 +25,10 @@ import heroBg from '../assets/hero-gb.jpeg';
 
 import { auth } from "../components/firebase";
 
+// Import study sessions
+import StudySessionsHome from "../components/StudySessionsHome";
+import { StudySessionsData } from "../components/StudySessions";
+
 import './Home.css';
 
 const Home = () => {
@@ -34,7 +38,6 @@ const Home = () => {
   useEffect(() => {
     AOS.init({ duration: 800, once: true });
 
-    // Check Firebase auth state for savings member
     const unsubscribe = auth.onAuthStateChanged(user => {
       if (user) setMemberLoggedIn(true);
       else setMemberLoggedIn(false);
@@ -50,9 +53,9 @@ const Home = () => {
 
   const handleSavingsCTA = () => {
     if (memberLoggedIn) {
-      navigate("/savings-member-dashboard"); // go to member dashboard
+      navigate("/savings-member-dashboard");
     } else {
-      navigate("/savings-login"); // go to login
+      navigate("/savings-login");
     }
   };
 
@@ -81,16 +84,14 @@ const Home = () => {
         </div>
       </section>
 
- { /*   {/* Birthday Section 
-      <section id="birthday" data-aos="fade-up" style={{ backgroundColor: "#fff3e0", padding: "40px 0" }}>
-       
-      </section>* */}
-
       {/* Courses Section */}
       <section id="courses" className="courses-section" data-aos="fade-up" style={{ backgroundColor: "#f9fafb", padding: "40px 0" }}>
         <h2>Our Courses</h2>
         <Courses />
       </section>
+
+      {/* Study Sessions Section */}
+      <StudySessionsHome />
 
       {/* Laptop Shop Section */}
       <section id="shop" className="shop-section" data-aos="fade-up" style={{ backgroundColor: "#eef2ff", padding: "40px 0" }}>
