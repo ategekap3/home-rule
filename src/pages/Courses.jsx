@@ -6,7 +6,7 @@ import img3 from '../assets/img3.jpg';
 import img4 from '../assets/img4.jpeg';
 
 const courses = [
-  { name: 'FUNDAMENTALS OF IT', fees: 'UGX. 450,000', image: img1, description: 'Learn computer basics, internet, email, and file management.'},
+  { name: 'UNDERSTANDING COMPUTER BASICS', fees: 'UGX. 450,000', image: img1, description: 'Learn computer basics, internet, email, and file management.'},
   { name: 'GRAPHICS DESIGN', fees: 'UGX. 800,000', image: img2, description: 'Master Photoshop, Illustrator, Canva and digital design.' },
   { name: 'PROGRAMMING', fees: 'UGX. 1,000,000', image: img3, description: 'Learn Python, JavaScript, HTML, CSS and more.' },
   { name: 'MS.OFFICE', fees: 'UGX. 500,000', image: img4, description: 'Includes Word, Excel, Access, PowerPoint, Publisher & Outlook. Free installations included.' },
