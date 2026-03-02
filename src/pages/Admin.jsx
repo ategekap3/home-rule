@@ -1,32 +1,36 @@
-// src/pages/Admin.jsx
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
   collection,
   query,
   orderBy,
   onSnapshot,
-  addDoc,
   deleteDoc,
   doc,
-  setDoc,
   serverTimestamp,
   updateDoc,
 } from "firebase/firestore";
 import { db, auth } from "../components/firebase";
+import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable";
 import "./Admin.css";
 
-export default function Admin() {
-  const [activeTab, setActiveTab] = useState("students"); // "students" or "savings"
-  const [students, setStudents] = useState([]);
-  const [savingsAccounts, setSavingsAccounts] = useState([]);
-  const [selectedStudent, setSelectedStudent] = useState(null);
-  const [inputValues, setInputValues] = useState({});
-  const [updateAmount, setUpdateAmount] = useState({});
-  const [newAccountId, setNewAccountId] = useState("");
-  const [messages, setMessages] = useState({});
-  const chatRefs = useRef({});
+// Ensure this path is correct for your project
+import logo from "../assets/logo.jpeg";
 
-  // Redirect if not logged in
+const availableCourses = [
+  "FUNDAMENTALS OF IT",
+  "GRAPHICS DESIGN",
+  "PROGRAMMING",
+  "MS.OFFICE",
+];
+
+export default function Admin() {
+  const [activeTab, setActiveTab] = useState("students");
+  const [students, setStudents] = useState([]);
+  const [filterCourse, setFilterCourse] = useState("All");
+  const [filterStatus, setFilterStatus] = useState("All");
+
+  // Auth Redirect
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (!user) window.location.href = "/admin-login";
@@ -34,7 +38,7 @@ export default function Admin() {
     return () => unsubscribe();
   }, []);
 
-  // Fetch Students
+  // Real-time Student Fetch
   useEffect(() => {
     const q = query(collection(db, "students"), orderBy("createdAt", "desc"));
     const unsubscribe = onSnapshot(q, (snap) => {
@@ -43,163 +47,173 @@ export default function Admin() {
     return () => unsubscribe();
   }, []);
 
-  // Fetch Savings Accounts
-  useEffect(() => {
-    const q = query(collection(db, "savingsAccounts"), orderBy("createdAt", "desc"));
-    const unsubscribe = onSnapshot(q, (snap) => {
-      setSavingsAccounts(snap.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+  const getProcessedStudents = () => {
+    return students.filter((s) => {
+      const courseMatch = filterCourse === "All" || s.course === filterCourse;
+      const statusMatch = filterStatus === "All" || (s.status || "Pending") === filterStatus;
+      return courseMatch && statusMatch;
     });
-    return () => unsubscribe();
-  }, []);
+  };
 
-  // Fetch Messages
-  useEffect(() => {
-    const q = query(collection(db, "messages"), orderBy("timestamp", "asc"));
-    const unsubscribe = onSnapshot(q, (snap) => {
-      const allMsgs = {};
-      snap.docs.forEach((docSnap) => {
-        const data = docSnap.data();
-        const userId = data.senderId === "admin" ? data.receiverId : data.senderId;
-        if (!allMsgs[userId]) allMsgs[userId] = [];
-        allMsgs[userId].push(data);
-      });
-      setMessages(allMsgs);
+  // --- BRANDING LOGIC (Based on shared PDF) ---
+  const applyBranding = (doc) => {
+    try {
+      doc.addImage(logo, "JPEG", 14, 10, 25, 25);
+    } catch (e) {
+      console.warn("Logo image not found");
+    }
 
-      // Scroll to bottom for chats
-      Object.keys(chatRefs.current).forEach((id) => {
-        chatRefs.current[id]?.scrollTo(0, chatRefs.current[id].scrollHeight);
-      });
+    doc.setFontSize(18);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(0, 51, 153); 
+    doc.text("MODERN COMPUTER WORLD UG", 45, 18);
+
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "italic");
+    doc.setTextColor(100, 100, 100); 
+    doc.text('"Digitalize yourself and future"', 45, 23);
+
+    doc.setFontSize(9);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(0, 0, 0);
+    doc.text("P.O.BOX 123 KAMPALA-UGANDA", 45, 28);
+    doc.text("TEL: 0509318330 | www.moderncomputerworldug.com", 45, 33);
+
+    doc.setLineWidth(0.5);
+    doc.setDrawColor(0, 51, 153);
+    doc.line(14, 38, 196, 38);
+  };
+
+  const addMissionFooter = (doc) => {
+    doc.setFontSize(8);
+    doc.setTextColor(150, 150, 150);
+    const mission = "Focused on training the world moves and meet with the trending technology by enabling them use a computer";
+    doc.text(mission, 14, doc.internal.pageSize.height - 10);
+  };
+
+  // --- PDF DOWNLOAD ACTIONS ---
+
+  // 1. Enrollment List PDF (Added back)
+  const downloadEnrollmentPDF = () => {
+    const doc = new jsPDF();
+    applyBranding(doc);
+    doc.setFontSize(12);
+    doc.text(`STUDENT ENROLLMENT LIST - ${filterCourse}`, 14, 46);
+
+    const rows = getProcessedStudents().map(s => [
+      `${s.firstName} ${s.secondName}`,
+      s.course,
+      s.whatsapp,
+      s.createdAt?.toDate ? s.createdAt.toDate().toLocaleDateString() : "N/A"
+    ]);
+
+    autoTable(doc, {
+      startY: 50,
+      head: [["Name", "Course", "WhatsApp", "Reg. Date"]],
+      body: rows,
+      theme: 'grid',
+      headStyles: { fillColor: [0, 51, 153] }
     });
-    return () => unsubscribe();
-  }, []);
 
-  // --- Students ---
-  const handleSendMessage = async (userId) => {
-    const text = inputValues[userId];
-    if (!text?.trim()) return;
-    await addDoc(collection(db, "messages"), {
-      senderId: "admin",
-      receiverId: userId,
-      text,
-      timestamp: new Date(),
-      read: false,
+    addMissionFooter(doc);
+    doc.save(`Enrollment_${filterCourse}.pdf`);
+  };
+
+  // 2. Finance Summary PDF
+  const downloadFinanceReport = () => {
+    const doc = new jsPDF();
+    applyBranding(doc);
+    doc.setFontSize(12);
+    doc.text("FINANCE & PROGRESS REPORT", 14, 46);
+
+    const rows = getProcessedStudents().map(s => [
+      `${s.firstName} ${s.secondName}`,
+      s.status || "Pending",
+      (s.tuition || 0).toLocaleString(),
+      (s.paid || 0).toLocaleString(),
+      ((s.tuition || 0) - (s.paid || 0)).toLocaleString()
+    ]);
+
+    autoTable(doc, {
+      startY: 50,
+      head: [["Name", "Status", "Tuition", "Paid", "Balance"]],
+      body: rows,
+      theme: 'grid',
+      headStyles: { fillColor: [40, 167, 69] }
     });
-    setInputValues((prev) => ({ ...prev, [userId]: "" }));
+
+    addMissionFooter(doc);
+    doc.save("Finance_Report.pdf");
   };
 
-  const handleDeleteStudent = async (studentId) => {
-    if (!window.confirm("Are you sure you want to delete this student?")) return;
-    try {
-      await deleteDoc(doc(db, "students", studentId));
-      alert("Student deleted successfully");
-      setSelectedStudent(null);
-    } catch (err) {
-      console.error(err);
-      alert("Failed to delete student.");
-    }
+  // 3. Individual Receipt PDF
+  const downloadReceipt = (s) => {
+    const doc = new jsPDF();
+    applyBranding(doc);
+    doc.setFontSize(14);
+    doc.text("OFFICIAL PAYMENT RECEIPT", 14, 48);
+
+    autoTable(doc, {
+      startY: 55,
+      body: [
+        ["Student Name", `${s.firstName} ${s.secondName}`],
+        ["Course", s.course || "N/A"],
+        ["Total Tuition", `UGX ${(s.tuition || 0).toLocaleString()}`],
+        ["Amount Paid", `UGX ${(s.paid || 0).toLocaleString()}`],
+        ["Balance Due", `UGX ${((s.tuition || 0) - (s.paid || 0)).toLocaleString()}`],
+      ],
+      theme: "grid",
+      headStyles: { fillColor: [0, 51, 153] },
+    });
+
+    doc.text("Authorized Signature: __________________", 14, 110);
+    addMissionFooter(doc);
+    doc.save(`Receipt_${s.firstName}.pdf`);
   };
 
-  // --- Savings Accounts ---
-  const generateSavingsAccountId = async () => {
-    if (!newAccountId) {
-      alert("Enter a unique Account ID first.");
-      return;
-    }
+  const handleUpdate = async (id, data) => {
     try {
-      await setDoc(doc(db, "savingsAccounts", newAccountId), {
-        name: "",
-        phone: "",
-        accountId: newAccountId,
-        balance: 0,
-        createdAt: serverTimestamp(),
-      });
-      alert(`Savings account ${newAccountId} generated successfully!`);
-      setNewAccountId("");
+      await updateDoc(doc(db, "students", id), data);
     } catch (err) {
       console.error(err);
-      alert("Failed to create savings account. Make sure the ID is unique.");
-    }
-  };
-
-  const handleDeleteSavings = async (accountId) => {
-    if (!window.confirm("Are you sure you want to delete this savings account?")) return;
-    try {
-      await deleteDoc(doc(db, "savingsAccounts", accountId));
-      alert("Savings account deleted successfully.");
-    } catch (err) {
-      console.error(err);
-      alert("Failed to delete savings account.");
-    }
-  };
-
-  const handleUpdateBalance = async (accountId) => {
-    const amount = parseFloat(updateAmount[accountId]);
-    if (isNaN(amount)) return alert("Enter a valid amount.");
-    try {
-      const accountRef = doc(db, "savingsAccounts", accountId);
-      const current = savingsAccounts.find((acc) => acc.id === accountId)?.balance || 0;
-      await updateDoc(accountRef, { balance: current + amount });
-      setUpdateAmount((prev) => ({ ...prev, [accountId]: "" }));
-    } catch (err) {
-      console.error(err);
-      alert("Failed to update balance.");
     }
   };
 
   return (
     <div className="admin-container">
-      {/* Header */}
       <div className="admin-header">
         <h2>Admin Dashboard</h2>
-        <button
-          className="logout-btn"
-          onClick={() => auth.signOut().then(() => (window.location.href = "/admin-login"))}
-        >
-          Logout
-        </button>
+        <button className="logout-btn" onClick={() => auth.signOut()}>Logout</button>
       </div>
 
-      {/* Tabs */}
       <div className="admin-tabs">
-        <button className={activeTab === "students" ? "active" : ""} onClick={() => setActiveTab("students")}>
-          Students
-        </button>
-        <button className={activeTab === "savings" ? "active" : ""} onClick={() => setActiveTab("savings")}>
-          Savings Members
-        </button>
+        <button className={activeTab === "students" ? "active" : ""} onClick={() => setActiveTab("students")}>Enrollment</button>
+        <button className={activeTab === "finance" ? "active" : ""} onClick={() => setActiveTab("finance")}>Finance & Status</button>
       </div>
 
-      {/* Students Table */}
+      {/* --- ENROLLMENT TAB --- */}
       {activeTab === "students" && (
         <div className="table-wrapper">
+          <div className="admin-controls">
+            <select onChange={(e) => setFilterCourse(e.target.value)}>
+              <option value="All">All Courses</option>
+              {availableCourses.map((c) => <option key={c} value={c}>{c}</option>)}
+            </select>
+            {/* ADDED BUTTON BACK HERE */}
+            <button className="btn-download" onClick={downloadEnrollmentPDF}>Download Enrollment PDF</button>
+          </div>
           <table>
             <thead>
-              <tr>
-                <th>Name</th>
-                <th>Course</th>
-                <th>WhatsApp</th>
-                <th>Send Message</th>
-                <th>Delete</th>
-              </tr>
+              <tr><th>Name</th><th>Course</th><th>WhatsApp</th><th>Reg. Date</th><th>Action</th></tr>
             </thead>
             <tbody>
-              {students.map((s) => (
+              {getProcessedStudents().map((s) => (
                 <tr key={s.id}>
                   <td>{s.firstName} {s.secondName}</td>
                   <td>{s.course}</td>
                   <td>{s.whatsapp}</td>
-                  <td>
-                    <input
-                      type="text"
-                      placeholder="Message"
-                      value={inputValues[s.id] || ""}
-                      onChange={(e) => setInputValues(prev => ({ ...prev, [s.id]: e.target.value }))}
-                    />
-                    <button onClick={() => handleSendMessage(s.id)}>Send</button>
-                  </td>
-                  <td>
-                    <button className="btn-danger" onClick={() => handleDeleteStudent(s.id)}>Delete</button>
-                  </td>
+                  <td>{s.createdAt?.toDate ? s.createdAt.toDate().toLocaleDateString() : "..."}</td>
+                  <td><button className="btn-danger" onClick={() => deleteDoc(doc(db, "students", s.id))}>Delete</button></td>
                 </tr>
               ))}
             </tbody>
@@ -207,55 +221,40 @@ export default function Admin() {
         </div>
       )}
 
-      {/* Savings Members Table */}
-      {activeTab === "savings" && (
+      {/* --- FINANCE & STATUS TAB --- */}
+      {activeTab === "finance" && (
         <div className="table-wrapper">
-          <div className="create-savings">
-            <input type="text" placeholder="Enter unique Account ID" value={newAccountId} onChange={(e) => setNewAccountId(e.target.value)} />
-            <button onClick={generateSavingsAccountId}>Generate Account</button>
+          <div className="admin-controls">
+            <select onChange={(e) => setFilterStatus(e.target.value)}>
+              <option value="All">All Statuses</option>
+              <option value="Pending">Pending</option>
+              <option value="Started">Started</option>
+              <option value="Completed">Completed</option>
+            </select>
+            <button className="btn-download" style={{backgroundColor: '#28a745'}} onClick={downloadFinanceReport}>Download Finance PDF</button>
           </div>
-
           <table>
             <thead>
-              <tr>
-                <th>Account ID</th>
-                <th>Name</th>
-                <th>Phone</th>
-                <th>Balance</th>
-                <th>Update Balance</th>
-                <th>Send Message</th>
-                <th>Delete</th>
-              </tr>
+              <tr><th>Name</th><th>Status</th><th>Tuition</th><th>Paid</th><th>Balance</th><th>Set Status</th><th>Receipt</th></tr>
             </thead>
             <tbody>
-              {savingsAccounts.map((acc) => (
-                <tr key={acc.id}>
-                  <td>{acc.accountId}</td>
-                  <td>{acc.name || "-"}</td>
-                  <td>{acc.phone || "-"}</td>
-                  <td>UGX {(acc.balance || 0).toLocaleString()}</td>
-                  <td>
-                    <input
-                      type="number"
-                      placeholder="Amount"
-                      value={updateAmount[acc.id] || ""}
-                      onChange={(e) => setUpdateAmount(prev => ({ ...prev, [acc.id]: e.target.value }))}
-                      style={{ width: "80px" }}
-                    />
-                    <button onClick={() => handleUpdateBalance(acc.id)}>Update</button>
+              {getProcessedStudents().map((s) => (
+                <tr key={s.id}>
+                  <td>{s.firstName} {s.secondName}</td>
+                  <td className={`status-${(s.status || "pending").toLowerCase()}`}>{s.status || "Pending"}</td>
+                  <td><input type="number" defaultValue={s.tuition || 0} onBlur={(e) => handleUpdate(s.id, { tuition: Number(e.target.value) })} /></td>
+                  <td><input type="number" defaultValue={s.paid || 0} onBlur={(e) => handleUpdate(s.id, { paid: Number(e.target.value) })} /></td>
+                  <td style={{ fontWeight: "bold", color: (s.tuition - s.paid > 0) ? "red" : "green" }}>
+                    {((s.tuition || 0) - (s.paid || 0)).toLocaleString()}
                   </td>
                   <td>
-                    <input
-                      type="text"
-                      placeholder="Message"
-                      value={inputValues[acc.id] || ""}
-                      onChange={(e) => setInputValues(prev => ({ ...prev, [acc.id]: e.target.value }))}
-                    />
-                    <button onClick={() => handleSendMessage(acc.id)}>Send</button>
+                    <select value={s.status || "Pending"} onChange={(e) => handleUpdate(s.id, { status: e.target.value, statusDate: new Date() })}>
+                      <option value="Pending">Pending</option>
+                      <option value="Started">Started</option>
+                      <option value="Completed">Completed</option>
+                    </select>
                   </td>
-                  <td>
-                    <button className="btn-danger" onClick={() => handleDeleteSavings(acc.id)}>Delete</button>
-                  </td>
+                  <td><button className="btn-send" onClick={() => downloadReceipt(s)}>Receipt</button></td>
                 </tr>
               ))}
             </tbody>
